@@ -1,5 +1,7 @@
 .cp {
   height: 256px;
+  margin: 0;
+  padding: 0;
 }
 .cp .cp-sv-container {
   float: left;
@@ -20,8 +22,8 @@
   position: absolute;
   width: 7px;
   height: 7px;
-  margin-left: -10px;
-  margin-top: -10px;
+  margin-left: -3px;
+  margin-top: -3px;
   left: -9999px;
   border: 1px solid;
   border-radius: 3px;
@@ -38,6 +40,27 @@
   top: 0;
   width: 100%;
   height: 100%;
+}
+.cp .cp-hue-container .cp-indicator-hue {
+  position: absolute;
+  width: 20px;
+  height: 1px;
+  top: 0;
+  left: 0;
+}
+.cp .cp-hue-container .cp-indicator-hue:before, .cp .cp-hue-container .cp-indicator-hue:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 1px;
+  background: #000;
+}
+.cp .cp-hue-container .cp-indicator-hue:before {
+  left: -6px;
+}
+.cp .cp-hue-container .cp-indicator-hue:after {
+  right: -6px;
 }
 .cp .cp-preview {
   float: left;

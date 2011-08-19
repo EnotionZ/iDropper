@@ -103,7 +103,8 @@ var ColorPicker = function(opts) {
 	 */
 	var $svContainer = opts.el.find('.cp-sv-container'),
 		$preview = $('.cp-preview'),
-		$colorIndicator = $('.cp-indicator-color');
+		$colorIndicator = $('.cp-indicator-color'),
+		$hueIndicator = $('.cp-indicator-hue');
 
 
 	/**
@@ -126,6 +127,8 @@ var ColorPicker = function(opts) {
 
 		setHueDegree: function(e) {
 			if(hueDown) {
+				$hueIndicator.css({ top: e.offsetY });
+
 				var h = parseInt(360*(1 - e.offsetY/height), 10) - 1,
 					hsv = [h, 1, 1],
 					rgb = utils.HsvToRgb(hsv),
@@ -139,7 +142,7 @@ var ColorPicker = function(opts) {
 
 		setSVFlag: function() { svDown = true; },
 
-		svMousemove: function(e) { if(svDown) fn.getColor(e.clientX, e.clientY); },
+		svMousemove: function(e) { if(svDown) fn.setPreview(fn.getColor(e.offsetX, e.offsetY)); },
 		
 		getColor: function(offx, offy) {
 			$colorIndicator.css({ left: offx, top: offy });
@@ -151,7 +154,8 @@ var ColorPicker = function(opts) {
 			
 			activeSaturation = s;
 			activeValue = v;
-			fn.setPreview(hex);
+
+			return hex;
 		},
 
 		setPreview: function(hex) {

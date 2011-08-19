@@ -1,5 +1,5 @@
 .cp {
-	height: 256px;
+	height: 256px; margin: 0; padding: 0;
 
 	.cp-sv-container {
 		float: left;
@@ -11,7 +11,7 @@
 		img.cp-sv-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 		.cp-indicator-color {
 			position: absolute; width: 7px; height: 7px;
-			margin-left: -10px; margin-top: -10px;
+			margin-left: -3px; margin-top: -3px;
 			left: -9999px;
 			border: 1px solid;
 			border-radius: 3px;
@@ -23,6 +23,16 @@
 		height: 256px;
 		position: relative;
 		img.cp-hue-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+		.cp-indicator-hue {
+			position: absolute; width: 20px; height: 1px;
+			top: 0; left: 0;
+
+			&:before, &:after {
+				content: ""; position: absolute; top: 0; width: 4px; height: 1px; background: #000;
+			}
+			&:before { left: -6px; }
+			&:after { right: -6px; }
+		}
 	}
 	.cp-preview {
 		float: left;
