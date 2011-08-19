@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="colorpicker.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="color_picker" class="cp">
+	<div class="cp-sv-container">
+		<img class="cp-sv-pick cp-pick" src="images/sloverlay.png"/>
+		<span class="cp-indicator-color"></span>
+	</div>
+	<div class="cp-hue-container">
+		<img class="cp-hue-pick cp-pick"src="images/hue.png"/>
+	</div>
+	<div class="cp-preview"></div>
+</div>
+
+<script src="colorpicker.js"></script>
+<script>
+ColorPicker({ el: '#color_picker', height: 256 });
+</script>
+</body>
+</html>

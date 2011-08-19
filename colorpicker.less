@@ -1,0 +1,34 @@
+.cp {
+	height: 256px;
+
+	.cp-sv-container {
+		float: left;
+		width: 256px;
+		height: 256px;
+		background: red;
+		position: relative;
+		margin-right: 10px;
+		img.cp-sv-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+		.cp-indicator-color {
+			position: absolute; width: 7px; height: 7px;
+			margin-left: -10px; margin-top: -10px;
+			left: -9999px;
+			border: 1px solid;
+			border-radius: 3px;
+		}
+	}
+	.cp-hue-container {
+		float: left;
+		width: 20px;
+		height: 256px;
+		position: relative;
+		img.cp-hue-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+	}
+	.cp-preview {
+		float: left;
+		clear: left;
+		height: 18px;
+		width: 286px;
+		margin-top: 10px;
+	}
+}
