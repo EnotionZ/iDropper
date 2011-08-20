@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>EyeDropper Example</title>
 	<link rel="stylesheet" type="text/css" href="colorpicker.css">
+	<style>
+		body { font: normal 12px/16px arial;}
+		.idrop_example { float: left; margin-right: 50px; }
+	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 </head>
 <body>
 
-<div id="color_picker" class="cp">
-	<div class="cp-sv-container">
-		<img class="cp-sv-pick cp-pick" src="images/sloverlay.png"/>
-		<span class="cp-indicator-color"></span>
-	</div>
-	<div class="cp-hue-container">
-		<img class="cp-hue-pick cp-pick"src="images/hue.png"/>
-		<span class="cp-indicator-hue"></span>
-	</div>
-	<div class="cp-preview"></div>
+<div id="idrop1" class="idrop_example">
+	<p>A callback was fired with color: <span id="id1_change"></span></p>
 </div>
+
+<div id="idrop2" class="idrop_example">
+	<p>You can set a dimension on iDrop</p>
+</div>
+
 
 <script src="colorpicker.js"></script>
 <script>
-ColorPicker({ el: '#color_picker', height: 256 });
+var $id1Change = $('#id1_change');
+$('#idrop1').iDroppr({
+	onChange: function(hex) { $id1Change.html(hex); }
+});
+
+$('#idrop2').iDroppr({ size: 128 });
 </script>
 </body>
 </html>

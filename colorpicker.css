@@ -1,9 +1,13 @@
-.cp {
-  height: 256px;
+.iD {
   margin: 0;
   padding: 0;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
-.cp .cp-sv-container {
+.iD .iD-sv-container {
   float: left;
   width: 256px;
   height: 256px;
@@ -11,14 +15,14 @@
   position: relative;
   margin-right: 10px;
 }
-.cp .cp-sv-container img.cp-sv-pick {
+.iD .iD-sv-container img.iD-sv-pick {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
 }
-.cp .cp-sv-container .cp-indicator-color {
+.iD .iD-sv-container .iD-indicator-color {
   position: absolute;
   width: 7px;
   height: 7px;
@@ -28,27 +32,27 @@
   border: 1px solid;
   border-radius: 3px;
 }
-.cp .cp-hue-container {
+.iD .iD-hue-container {
   float: left;
   width: 20px;
   height: 256px;
   position: relative;
 }
-.cp .cp-hue-container img.cp-hue-pick {
+.iD .iD-hue-container img.iD-hue-pick {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
 }
-.cp .cp-hue-container .cp-indicator-hue {
+.iD .iD-hue-container .iD-indicator-hue {
   position: absolute;
   width: 20px;
   height: 1px;
   top: 0;
   left: 0;
 }
-.cp .cp-hue-container .cp-indicator-hue:before, .cp .cp-hue-container .cp-indicator-hue:after {
+.iD .iD-hue-container .iD-indicator-hue:before, .iD .iD-hue-container .iD-indicator-hue:after {
   content: "";
   position: absolute;
   top: 0;
@@ -56,16 +60,16 @@
   height: 1px;
   background: #000;
 }
-.cp .cp-hue-container .cp-indicator-hue:before {
+.iD .iD-hue-container .iD-indicator-hue:before {
   left: -6px;
 }
-.cp .cp-hue-container .cp-indicator-hue:after {
+.iD .iD-hue-container .iD-indicator-hue:after {
   right: -6px;
 }
-.cp .cp-preview {
+.iD .iD-preview {
   float: left;
   clear: left;
   height: 18px;
-  width: 286px;
+  width: 100%;
   margin-top: 10px;
 }

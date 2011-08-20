@@ -1,15 +1,21 @@
-.cp {
-	height: 256px; margin: 0; padding: 0;
+.iD {
+	margin: 0; padding: 0;
 
-	.cp-sv-container {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+
+	.iD-sv-container {
 		float: left;
 		width: 256px;
 		height: 256px;
 		background: red;
 		position: relative;
 		margin-right: 10px;
-		img.cp-sv-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
-		.cp-indicator-color {
+		img.iD-sv-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+		.iD-indicator-color {
 			position: absolute; width: 7px; height: 7px;
 			margin-left: -3px; margin-top: -3px;
 			left: -9999px;
@@ -17,13 +23,13 @@
 			border-radius: 3px;
 		}
 	}
-	.cp-hue-container {
+	.iD-hue-container {
 		float: left;
 		width: 20px;
 		height: 256px;
 		position: relative;
-		img.cp-hue-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
-		.cp-indicator-hue {
+		img.iD-hue-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+		.iD-indicator-hue {
 			position: absolute; width: 20px; height: 1px;
 			top: 0; left: 0;
 
@@ -34,11 +40,11 @@
 			&:after { right: -6px; }
 		}
 	}
-	.cp-preview {
+	.iD-preview {
 		float: left;
 		clear: left;
 		height: 18px;
-		width: 286px;
+		width: 100%;
 		margin-top: 10px;
 	}
 }
