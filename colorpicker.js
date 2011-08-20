@@ -90,7 +90,7 @@ jQuery.fn.iDroppr = (function($) {
 	var iDfn = {
 		preventGhost: function() { return false; }, // Stops bubbling, prevents dragging image ghost
 		mouseup: function() { activeDropper = null; },
-		mousemove: function(e) { if(activeDropper) activeDropper.trigger('mousedrag', e); }
+		mousemove: function(e) { if(activeDropper){ activeDropper.trigger('mousedrag', e); console.log(activeDropper)} }
 	};
 	$body.bind('mousemove.iDfn', iDfn['mousemove']);
 	$body.bind('mouseup.iDfn', iDfn['mouseup']);
@@ -126,7 +126,6 @@ jQuery.fn.iDroppr = (function($) {
 
 
 
-
 		var size = opts.size || 256,	// width/height of square hue/value container
 			activeHSV = [0,1,1],		// current color of picker
 			dragInfo = { type: '', tx: 0, ty: 0 };
@@ -149,7 +148,6 @@ jQuery.fn.iDroppr = (function($) {
 				var m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
 
 				if(m.x<0) m.x=0;
-
 
 				if(dragInfo.type === 'hue') self.trigger('huedrag', m);
 				else if(dragInfo.type === 'sv') self.trigger('svdrag', m);
