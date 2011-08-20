@@ -17,11 +17,11 @@
 </div>
 
 <div id="idrop2" class="idrop_example">
-	<p>You can set a dimension on iDropper</p>
+	<p>Supports two layouts: 'bar' and 'ring'</p>
 </div>
 
 <div id="idrop3" class="idrop_example">
-	<p>iDropper has two different types of layout</p>
+	<p>Supports size settings</p>
 </div>
 
 
@@ -29,8 +29,8 @@
 <script>
 var $id1Change = $('#id1_change');
 $('#idrop1').iDropper({ onChange: function(hex) { $id1Change.html(hex); } });
-$('#idrop2').iDropper({ size: 128 });
-$('#idrop3').iDropper({ layout: 'ring', size: 128});
+$('#idrop2').iDropper({ layout: 'ring', size: 128});
+$('#idrop3').iDropper({ size: 128 });
 </script>
 </body>
 </html>
