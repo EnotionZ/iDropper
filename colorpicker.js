@@ -82,15 +82,14 @@ jQuery.fn.iDroppr = (function($) {
 
 
 	/**
-	 * A parent controller for all the instances of color picker.
-	 * This is an element pattern (of sort)
+	 * Mouse up and move events (drag and dragend) are attached only once on the body
 	 */
 	var $body = $('body');
 	var activeDropper = null;
 	var iDfn = {
 		preventGhost: function() { return false; }, // Stops bubbling, prevents dragging image ghost
 		mouseup: function() { activeDropper = null; },
-		mousemove: function(e) { if(activeDropper){ activeDropper.trigger('mousedrag', e); console.log(activeDropper)} }
+		mousemove: function(e) { if(activeDropper){ activeDropper.trigger('mousedrag', e); } }
 	};
 	$body.bind('mousemove.iDfn', iDfn['mousemove']);
 	$body.bind('mouseup.iDfn', iDfn['mouseup']);
@@ -156,8 +155,8 @@ jQuery.fn.iDroppr = (function($) {
 			huedrag: function(m) {
 				if(m.y < 0) m.y = 0;
 				if(m.y > size) m.y = size;
-				$hueIndicator.css({ top: m.y });						// position hue indicator
-				activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;	// set hue value
+				$hueIndicator.css({ top: m.y });
+				activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
 				$svContainer.css('background-color', fn.getHex([activeHSV[0], 1, 1]));
 			},
 			svdrag: function(m) {
@@ -166,7 +165,7 @@ jQuery.fn.iDroppr = (function($) {
 				if(m.x > size) m.x = size;
 				if(m.y > size) m.y = size;
 
-				$colorIndicator.css({ left: m.x, top: m.y });			// position saturation/value indicator
+				$colorIndicator.css({ left: m.x, top: m.y });
 				activeHSV[1] = m.x/size;
 				activeHSV[2] = 1-m.y/size;
 			},
@@ -221,6 +220,9 @@ jQuery.fn.iDroppr = (function($) {
 
 
 	return function(opts) {
+		// iDropper should be instantiated uniquely and only once
+		if(this.length<1) this = this.eq(0);
+
 		opts.$el = this;
 		this.iDroppr = new IDroppr(opts);
 	};
