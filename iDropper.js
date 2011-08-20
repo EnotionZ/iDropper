@@ -114,6 +114,15 @@ jQuery.fn.iDropper = (function($) {
 		};
 		$imgPathEl.remove();
 
+	
+	/**
+	 * Global dimension setup
+	 */
+	var fullSize = 256,											// original width of the saturation-value map
+		fullRSize = 482,										// full ring size, original width of hue ring
+		ringHalf = 50/2,										// Hue ring's (outter_radius - inner_radius)/2
+		indicatorPercent = (fullRSize/2-ringHalf)/fullRSize,	// percent of hue ring's width from center point where indicator sits
+		radiansToDegrees = 360/(2*Math.PI);
 
 
 
@@ -132,15 +141,14 @@ jQuery.fn.iDropper = (function($) {
 	 	this.hooks = {};
 
 
+		var size = opts.size || fullSize,								// width-height of square saturation-value container
+			ringSize = fullRSize*size/fullSize,							// hue ring is proportional to size input
+			ringRadius = ringSize/2,									// allows for normalizing axis later
+			hypotenuse = ringSize*indicatorPercent,						// hue ring's indicator radius
 
-		var size = opts.size || 256,								// width/height of square hue/value container
-			layout = opts.layout === 'ring' ? 'ring' : 'bar',		// layout is either bar or ring
-			percentRadius = 0.46,						// percent of hue ring's width which we consider "radius"
-			hueRingSize = size*482/256,
-			hypotenuse = hueRingSize*percentRadius,
-			radiansToDegrees = 360/(2*Math.PI),
-			activeHSV = [0,1,1],									// current color of picker
-			dragInfo = { type: '', tx: 0, ty: 0 };					// indicates either hue or sv dragging
+			activeHSV = [0,1,1],										// current color of picker
+			layout = opts.layout === 'ring' ? 'ring' : 'bar',			// layout is either bar or ring
+			dragInfo = { type: '', tx: 0, ty: 0 };						// indicates either hue or sv dragging
 
 
 
@@ -184,10 +192,10 @@ jQuery.fn.iDropper = (function($) {
 				if(m.y < 0) m.y = 0;
 
 				if(layout === 'ring') {
-					if(m.y > hueRingSize) m.y = hueRingSize;
+					if(m.y > ringSize) m.y = ringSize;
 
-					var x = m.x - hueRingSize/2,
-						y = m.y - hueRingSize/2;
+					var x = m.x - ringRadius,
+						y = m.y - ringRadius;
 
 					if(x === 0) x = .00000001;
 					if(y === 0) y = .00000001;
@@ -198,16 +206,16 @@ jQuery.fn.iDropper = (function($) {
 					if((x>0 && y>0) || (x>0 && y < 0)) d+= 180;
 					activeHSV[0] = parseInt(d - 1);
 
-					x = parseInt(hypotenuse*Math.cos(t) + hueRingSize/2, 10);
-					y = parseInt(hypotenuse*Math.sin(t) + hueRingSize/2, 10);
+					x = parseInt(hypotenuse*Math.cos(t) + ringRadius, 10);
+					y = parseInt(hypotenuse*Math.sin(t) + ringRadius, 10);
 
-					if(m.x < hueRingSize/2) {
-						x = hueRingSize-x;
-						y = hueRingSize-y;
+					if(m.x < ringRadius) {
+						x = ringSize-x;
+						y = ringSize-y;
 					}
 
 					$hueIndicator.css({ top: y, left: x });
-				} else {
+				} else if(layout === 'bar') {
 					if(m.y > size) m.y = size-1;
 					activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
 					$hueIndicator.css({ top: m.y });
@@ -258,8 +266,8 @@ jQuery.fn.iDropper = (function($) {
 			$svContainer.css({ width: size, height: size });
 
 			if(layout === 'ring') {
-				$iD.css({ width: hueRingSize, height: hueRingSize });
-				$hueContainer.css({ width: hueRingSize, height: hueRingSize });
+				$iD.css({ width: ringSize, height: ringSize });
+				$hueContainer.css({ width: ringSize, height: ringSize });
 			} else {
 				$hueContainer.css({ width: hueWidth, height: size });
 				$hueIndicator.width(hueWidth);
