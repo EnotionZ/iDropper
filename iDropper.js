@@ -182,9 +182,10 @@ jQuery.fn.iDropper = (function($) {
 			},
 			huedrag: function(m) {
 				if(m.y < 0) m.y = 0;
-				if(m.y > hueRingSize) m.y = hueRingSize;
 
 				if(layout === 'ring') {
+					if(m.y > hueRingSize) m.y = hueRingSize;
+
 					var x = m.x - hueRingSize/2,
 						y = m.y - hueRingSize/2;
 
@@ -207,6 +208,7 @@ jQuery.fn.iDropper = (function($) {
 
 					$hueIndicator.css({ top: y, left: x });
 				} else {
+					if(m.y > size) m.y = size-1;
 					activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
 					$hueIndicator.css({ top: m.y });
 				}
