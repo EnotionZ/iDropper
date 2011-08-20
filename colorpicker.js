@@ -1,4 +1,4 @@
-jQuery.fn.iDroppr = (function($) {
+jQuery.fn.iDropper = (function($) {
 
 
 	/**
@@ -97,6 +97,20 @@ jQuery.fn.iDroppr = (function($) {
 
 
 
+	/**
+	 * Figuring out image path
+	 * In order to support setting colorpicker dimension without relying on CSS3 (background-size) or Canvas to draw the picker model,
+	 * we must represent with an image and resize it accordingly. The only way to reliably predict the path of the image to set on the
+	 * src attribute (and also to keep a formal layer separation), the image is set as the background of a class in the CSS, we can
+	 * then pull the image path by reading the background-image css attribute on that class.
+	 */
+	var $imgPathEl = $('<div/>').appendTo($body),
+		URL = {
+			SATVAL: $imgPathEl.attr('class','iD-img-sv').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
+			HUEBAR: $imgPathEl.attr('class','iD-img-hue').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
+		};
+		$imgPathEl.remove();
+
 
 	/**
 	 * Color Picker Class
@@ -105,7 +119,7 @@ jQuery.fn.iDroppr = (function($) {
 	 * @param 	size 		integer pixel of the width/height of the square hue/value box
 	 * @param 	onChange 	function that's triggered when the color selection changes
 	 */
-	 var IDroppr = function(opts) {
+	 var IDropper = function(opts) {
 	 	
 	 	var self = this;
 	 	this.hooks = {};
@@ -116,10 +130,10 @@ jQuery.fn.iDroppr = (function($) {
 		var $el = opts.$el,
 			$iD = $('<div/>').addClass('iD').appendTo($el),
 				$svContainer = $('<div/>').addClass('iD-sv-container').appendTo($iD),
-					$svPick = $('<img/>').addClass('iD-pick iD-sv-pick').attr('src','images/sloverlay.png').appendTo($svContainer),
+					$svPick = $('<img/>').addClass('iD-pick iD-sv-pick').attr('src',URL.SATVAL).appendTo($svContainer),
 					$colorIndicator = $('<div/>').addClass('iD-indicator-color').appendTo($svContainer),
 				$hueContainer = $('<div/>').addClass('iD-hue-container').appendTo($iD),
-					$huePick = $('<img/>').addClass('iD-pick iD-hue-pick').attr('src','images/hue.png').appendTo($hueContainer),
+					$huePick = $('<img/>').addClass('iD-pick iD-hue-pick').attr('src',URL.HUEBAR).appendTo($hueContainer),
 					$hueIndicator = $('<div/>').addClass('iD-indicator-hue').appendTo($hueContainer),
 				$preview = $('<div/>').addClass('iD-preview').appendTo($iD);
 
@@ -204,15 +218,16 @@ jQuery.fn.iDroppr = (function($) {
 			$hueContainer.css({ width: hueWidth, height: size });
 			$hueIndicator.width(hueWidth);
 		}
+
 		fn.setPreview();
 
 	};
-	IDroppr.prototype.bind = function(event, fn) {
+	IDropper.prototype.bind = function(event, fn) {
 		if(typeof fn !== 'function') return false;
 		if(!this.hooks[event]) this.hooks[event] = [];
 		this.hooks[event].push(fn);
 	};
-	IDroppr.prototype.trigger = function(event, param) {
+	IDropper.prototype.trigger = function(event, param) {
 		var fns = this.hooks[event];
 		if(!fns) return false;
 		for(var i=0; i<fns.length; i++) fns[i](param);
@@ -224,7 +239,7 @@ jQuery.fn.iDroppr = (function($) {
 		if(this.length>1) this = this.eq(0);
 
 		opts.$el = this;
-		this.iDroppr = new IDroppr(opts);
+		this.iDropper = new IDropper(opts);
 	};
 
 })(jQuery);

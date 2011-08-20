@@ -73,3 +73,9 @@
   width: 100%;
   margin-top: 10px;
 }
+.iD-img-sv {
+  background-image: url('images/sloverlay.png');
+}
+.iD-img-hue {
+  background-image: url('images/hue.png');
+}
