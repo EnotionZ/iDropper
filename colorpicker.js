@@ -221,7 +221,7 @@ jQuery.fn.iDroppr = (function($) {
 
 	return function(opts) {
 		// iDropper should be instantiated uniquely and only once
-		if(this.length<1) this = this.eq(0);
+		if(this.length>1) this = this.eq(0);
 
 		opts.$el = this;
 		this.iDroppr = new IDroppr(opts);
