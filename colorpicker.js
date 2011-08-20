@@ -140,8 +140,8 @@ jQuery.fn.iDroppr = (function($) {
 				activeDropper = self;
 				dragInfo = { type: type, tx: tOffset.left, ty: tOffset.top };
 			},
-			setSVFlag: function(e) { fn.setFlag(e,'sv'); },
-			setHueFlag: function(e) { fn.setFlag(e,'hue'); },
+			setSVFlag: function(e) { fn.setFlag(e,'sv'); fn.mousedrag(e); },
+			setHueFlag: function(e) { fn.setFlag(e,'hue'); fn.mousedrag(e); },
 
 			mousedrag: function(e) {
 				var m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
