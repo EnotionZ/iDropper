@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>EyeDropper Example</title>
+	<link rel="stylesheet" type="text/css" href="iDropper.css">
+	<style>
+		html, body { height: 100%; }
+		body { font: normal 12px/16px arial;}
+		.idrop_example { float: left; margin-right: 50px; }
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="idrop1" class="idrop_example">
+	<p>A callback was fired with color: <span id="id1_change"></span></p>
+</div>
+
+<div id="idrop2" class="idrop_example">
+	<p>You can set a dimension on iDropper</p>
+</div>
+
+<div id="idrop3" class="idrop_example">
+	<p>iDropper has two different types of layout</p>
+</div>
+
+
+<script src="iDropper.js"></script>
+<script>
+var $id1Change = $('#id1_change');
+$('#idrop1').iDropper({ onChange: function(hex) { $id1Change.html(hex); } });
+$('#idrop2').iDropper({ size: 128 });
+$('#idrop3').iDropper({ layout: 'ring', size: 128});
+</script>
+</body>
+</html>
