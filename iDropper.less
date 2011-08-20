@@ -7,11 +7,55 @@
 	-o-user-select: none;
 	user-select: none;
 
+	&.iD-layout-bar {
+		
+	}
+
+	&.iD-layout-ring {
+		position: relative;
+		width: 482px; height: 482px;
+
+		.iD-sv-container {
+			position: absolute; z-index: 1;
+			left: 23.443983%; top: 23.443983%;
+		}
+		.iD-hue-container {
+			position: absolute;
+			width: 482px; height: 482px;
+			.iD-indicator-hue {
+				position: absolute; width: 7px; height: 7px;
+				margin-left: -3px; margin-top: -3px;
+				top: -9999px;
+				border: 1px solid;
+				border-radius: 3px;
+			}
+		}
+		.iD-preview {
+			position: absolute;
+			bottom: -30px;
+		}
+	}
+
+	&.iD-layout-bar {
+		.iD-hue-container {
+			.iD-indicator-hue {
+				position: absolute; width: 20px; height: 1px;
+				top: 0; left: 0;
+
+				&:before, &:after {
+					content: ""; position: absolute; top: 0; width: 4px; height: 1px; background: #000;
+				}
+				&:before { left: -6px; }
+				&:after { right: -6px; }
+			}
+		}
+	}
+
 	.iD-sv-container {
 		float: left;
 		width: 256px;
 		height: 256px;
-		background: red;
+		background: #ff0000;
 		position: relative;
 		margin-right: 10px;
 		img.iD-sv-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
@@ -29,16 +73,7 @@
 		height: 256px;
 		position: relative;
 		img.iD-hue-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
-		.iD-indicator-hue {
-			position: absolute; width: 20px; height: 1px;
-			top: 0; left: 0;
 
-			&:before, &:after {
-				content: ""; position: absolute; top: 0; width: 4px; height: 1px; background: #000;
-			}
-			&:before { left: -6px; }
-			&:after { right: -6px; }
-		}
 	}
 	.iD-preview {
 		float: left;
@@ -49,4 +84,5 @@
 	}
 }
 .iD-img-sv { background-image: url('images/sloverlay.png'); }
-.iD-img-hue { background-image: url('images/hue.png'); }
+.iD-img-huebar { background-image: url('images/hue.png'); }
+.iD-img-huering { background-image: url('images/hue_ring.png'); }

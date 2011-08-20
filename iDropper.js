@@ -97,6 +97,8 @@ jQuery.fn.iDropper = (function($) {
 
 
 
+
+
 	/**
 	 * Figuring out image path
 	 * In order to support setting colorpicker dimension without relying on CSS3 (background-size) or Canvas to draw the picker model,
@@ -107,41 +109,52 @@ jQuery.fn.iDropper = (function($) {
 	var $imgPathEl = $('<div/>').appendTo($body),
 		URL = {
 			SATVAL: $imgPathEl.attr('class','iD-img-sv').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
-			HUEBAR: $imgPathEl.attr('class','iD-img-hue').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
+			HUEBAR: $imgPathEl.attr('class','iD-img-huebar').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
+			HUERING: $imgPathEl.attr('class','iD-img-huering').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
 		};
 		$imgPathEl.remove();
+
+
 
 
 	/**
 	 * Color Picker Class
 	 * 
 	 * Possible option settings:
-	 * @param 	size 		integer pixel of the width/height of the square hue/value box
-	 * @param 	onChange 	function that's triggered when the color selection changes
+	 * @param 	size 		Integer pixel of the width/height of the square hue/value box
+	 * @param 	onChange 	Function that's triggered when the color selection changes
+	 * @param 	type 		String indicates which type of layout to use. Either 'bar' or 'ring'. Default 'bar'
 	 */
 	 var IDropper = function(opts) {
+
 	 	
 	 	var self = this;
 	 	this.hooks = {};
+
+
+
+		var size = opts.size || 256,								// width/height of square hue/value container
+			layout = opts.layout === 'ring' ? 'ring' : 'bar',		// layout is either bar or ring
+			percentRadius = 0.4999225219951447,						// percent of hue ring's width which we consider "radius"
+			hueRingSize = size*482/256,
+			radiansToDegrees = 360/(2*Math.PI),
+			activeHSV = [0,1,1],									// current color of picker
+			dragInfo = { type: '', tx: 0, ty: 0 };					// indicates either hue or sv dragging
+
+
 
 		/**
 		 * Element Reference
 		 */
 		var $el = opts.$el,
-			$iD = $('<div/>').addClass('iD').appendTo($el),
+			$iD = $('<div/>').addClass('iD iD-layout-'+layout).appendTo($el),
 				$svContainer = $('<div/>').addClass('iD-sv-container').appendTo($iD),
 					$svPick = $('<img/>').addClass('iD-pick iD-sv-pick').attr('src',URL.SATVAL).appendTo($svContainer),
 					$colorIndicator = $('<div/>').addClass('iD-indicator-color').appendTo($svContainer),
 				$hueContainer = $('<div/>').addClass('iD-hue-container').appendTo($iD),
-					$huePick = $('<img/>').addClass('iD-pick iD-hue-pick').attr('src',URL.HUEBAR).appendTo($hueContainer),
+					$huePick = $('<img/>').addClass('iD-pick iD-hue-pick').attr('src',(layout === 'ring' ? URL.HUERING : URL.HUEBAR)).appendTo($hueContainer),
 					$hueIndicator = $('<div/>').addClass('iD-indicator-hue').appendTo($hueContainer),
 				$preview = $('<div/>').addClass('iD-preview').appendTo($iD);
-
-
-
-		var size = opts.size || 256,	// width/height of square hue/value container
-			activeHSV = [0,1,1],		// current color of picker
-			dragInfo = { type: '', tx: 0, ty: 0 };
 
 
 
@@ -169,8 +182,20 @@ jQuery.fn.iDropper = (function($) {
 			huedrag: function(m) {
 				if(m.y < 0) m.y = 0;
 				if(m.y > size) m.y = size;
-				$hueIndicator.css({ top: m.y });
-				activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
+
+				if(layout === 'ring') {
+					var x = m.x - hueRingSize/2,
+						y = m.y - hueRingSize/2,
+						t = Math.atan(y/x),
+						d = t*radiansToDegrees;
+					
+					d = 90 - d;
+					if((x>0 && y>0) || (x>0 && y < 0)) d+= 180;
+					activeHSV[0] = parseInt(d - 1);
+				} else {
+					$hueIndicator.css({ top: m.y });
+					activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
+				}
 				$svContainer.css('background-color', fn.getHex([activeHSV[0], 1, 1]));
 			},
 			svdrag: function(m) {
@@ -215,8 +240,14 @@ jQuery.fn.iDropper = (function($) {
 		if(typeof opts.size === 'number') {
 			var hueWidth = parseInt(size/13,10);
 			$svContainer.css({ width: size, height: size });
-			$hueContainer.css({ width: hueWidth, height: size });
-			$hueIndicator.width(hueWidth);
+
+			if(layout === 'ring') {
+				$iD.css({ width: hueRingSize, height: hueRingSize });
+				$hueContainer.css({ width: hueRingSize, height: hueRingSize });
+			} else {
+				$hueContainer.css({ width: hueWidth, height: size });
+				$hueIndicator.width(hueWidth);
+			}
 		}
 
 		fn.setPreview();
