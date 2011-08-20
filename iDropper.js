@@ -135,8 +135,9 @@ jQuery.fn.iDropper = (function($) {
 
 		var size = opts.size || 256,								// width/height of square hue/value container
 			layout = opts.layout === 'ring' ? 'ring' : 'bar',		// layout is either bar or ring
-			percentRadius = 0.4999225219951447,						// percent of hue ring's width which we consider "radius"
+			percentRadius = 0.46,						// percent of hue ring's width which we consider "radius"
 			hueRingSize = size*482/256,
+			hypotenuse = hueRingSize*percentRadius,
 			radiansToDegrees = 360/(2*Math.PI),
 			activeHSV = [0,1,1],									// current color of picker
 			dragInfo = { type: '', tx: 0, ty: 0 };					// indicates either hue or sv dragging
@@ -181,20 +182,33 @@ jQuery.fn.iDropper = (function($) {
 			},
 			huedrag: function(m) {
 				if(m.y < 0) m.y = 0;
-				if(m.y > size) m.y = size;
+				if(m.y > hueRingSize) m.y = hueRingSize;
 
 				if(layout === 'ring') {
 					var x = m.x - hueRingSize/2,
-						y = m.y - hueRingSize/2,
-						t = Math.atan(y/x),
-						d = t*radiansToDegrees;
-					
-					d = 90 - d;
+						y = m.y - hueRingSize/2;
+
+					if(x === 0) x = .00000001;
+					if(y === 0) y = .00000001;
+
+					t= Math.atan(y/x);
+					d = 90 - t*radiansToDegrees;
+
 					if((x>0 && y>0) || (x>0 && y < 0)) d+= 180;
 					activeHSV[0] = parseInt(d - 1);
+
+					x = parseInt(hypotenuse*Math.cos(t) + hueRingSize/2, 10);
+					y = parseInt(hypotenuse*Math.sin(t) + hueRingSize/2, 10);
+
+					if(m.x < hueRingSize/2) {
+						x = hueRingSize-x;
+						y = hueRingSize-y;
+					}
+
+					$hueIndicator.css({ top: y, left: x });
 				} else {
-					$hueIndicator.css({ top: m.y });
 					activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
+					$hueIndicator.css({ top: m.y });
 				}
 				$svContainer.css('background-color', fn.getHex([activeHSV[0], 1, 1]));
 			},
