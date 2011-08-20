@@ -18,12 +18,17 @@ Just another jQuery color picker...
 Usage
 -----
 Download and include the iDropper css & javascript files along with jQuery on your page
+
+```html
     <link rel="stylesheet" type="text/css" href="path_to_css/colorpicker.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="path_to_js/colorpicker.js"></script>
+```
 
 iDropper works like a jQuery plugin. Pass in 'onChange' callback which gets triggered 
 when a different color is selected
+
+```html
     <div id="idropper_test">derp derp derp</div>
     <script>
         $('#idropper_test').iDropper({
@@ -32,12 +37,16 @@ when a different color is selected
             }
         });
     </script>
+```
 
 To set the dimension of iDropper, simply set 'size' on the object parameter with the number
 of pixels that the saturation/value scale container should be. This container is square, so 
 you only need one value
+
+```html
     <script>
         $('#idropper_test').iDropper({
             size: 128
         });
     </script>
+```
