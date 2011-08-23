@@ -20,9 +20,9 @@ Usage
 Download and include the iDropper css & javascript files along with jQuery on your page
 
 ```html
-    <link rel="stylesheet" type="text/css" href="path_to_css/colorpicker.css">
+    <link rel="stylesheet" type="text/css" href="path_to_css/iDropper.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script src="path_to_js/colorpicker.js"></script>
+    <script src="path_to_js/iDropper.js"></script>
 ```
 
 iDropper works like a jQuery plugin. Pass in 'onChange' callback which gets triggered 
