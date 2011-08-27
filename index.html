@@ -13,7 +13,15 @@
 <body>
 
 <div id="idrop1" class="idrop_example">
-	<p>A callback was fired with color: <span id="id1_change"></span></p>
+	<p>
+		<ul>
+		<li>IDropper with Callback on Color: <span id="id1_change"></span></li>
+		<li>Hue-shift 180: <span id="id1_hueshift"></span></li>
+		<li>Lighten by 25%: <span id="id1_lighten"></span></li>
+		<li>Darken by 25%: <span id="id1_darken"></span></li>
+		<li>Saturate by 25%: <span id="id1_sat"></span></li>
+		<li>Desaturate by 25%: <span id="id1_desat"></span></li>
+	</p>
 </div>
 
 <div id="idrop2" class="idrop_example">
@@ -27,8 +35,30 @@
 
 <script src="iDropper.js"></script>
 <script>
-var $id1Change = $('#id1_change');
-$('#idrop1').iDropper({ onChange: function(hex) { $id1Change.html(hex); } });
+var $id1Change = $('#id1_change'),
+	$id1Hueshift = $('#id1_hueshift'),
+	$id1Darken = $('#id1_darken'),
+	$id1Lighten = $('#id1_lighten'),
+	$id1Saturate = $('#id1_sat'),
+	$id1Desaturate = $('#id1_desat');
+
+$('#idrop1').iDropper({
+	onChange: function(hex) {
+		var
+		hueshift = IDropper.changeHue(hex, 180),
+		darken = IDropper.darken(hex, .25),
+		lighten = IDropper.lighten(hex, .25),
+		sat = IDropper.saturate(hex, .25),
+		desat = IDropper.desaturate(hex, .25);
+
+		$id1Change.html(hex).css('background',hex);
+		$id1Hueshift.html(hueshift).css('background',hueshift);
+		$id1Lighten.html(lighten).css('background', lighten);
+		$id1Darken.html(darken).css('background', darken);
+		$id1Saturate.html(sat).css('background', sat);
+		$id1Desaturate.html(desat).css('background', desat);
+	}
+});
 $('#idrop2').iDropper({ layout: 'ring', size: 128});
 $('#idrop3').iDropper({ size: 128 });
 </script>

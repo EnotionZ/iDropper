@@ -1,82 +1,101 @@
+var IDropper;
 jQuery.fn.iDropper = (function($) {
 
 
 	/**
 	 * Color math and other utility functions
 	 */
-	var utils = (function(){
+	var
+
+	RgbFromHCM = function(hue, chroma, match) {
+		var rgb, hp = hue/60, x = chroma*(1 - Math.abs(hp%2 - 1));
+		if(hp < 1) rgb = [chroma,x,0];
+		else if(hp < 2) rgb = [x,chroma,0];
+		else if(hp < 3) rgb = [0,chroma,x];
+		else if(hp < 4) rgb = [0,x,chroma];
+		else if(hp < 5) rgb = [x,0,chroma];
+		else if(hp < 6) rgb = [chroma,0,x];
+		return [parseInt(255*(rgb[0]+match),10), parseInt(255*(rgb[1]+match),10), parseInt(255*(rgb[2]+match),10)];
+	},
+	HslToRgb = function(hsl) {
+		var h = hsl[0], s = hsl[1], l = hsl[2],
+			c = (1 - Math.abs(2*l - 1))*s,
+			m = l - 0.5*c, rgb = [];
+		return RgbFromHCM(h,c,m);
+	},
+	HsvToRgb = function(hsv) {
+		var h = hsv[0], s = hsv[1], v = hsv[2],
+			c = v*s, m = v - c, rgb = [];
+		return RgbFromHCM(h,c,m);
+	},
+	RgbToHex = function(rgb) {
+		var hex = [], bit;
+		if(rgb[3] === 0) return 'transparent';
+		for(var i = 0; i < 3; i++) {
+			bit = (rgb[i] - 0).toString(16);
+			hex.push(bit.length == 1 ? ('0' + bit) : bit);
+		}
+		return '#' + hex.join('');
+	},
+	HexToRgb = function(hex) {
+		hex = hex.replace(/#/g,'');
+
+		if(hex.length !== 6) return false;
+
 		var
+		r = parseInt(hex.substr(0,2), 16);
+		g = parseInt(hex.substr(2,2), 16);
+		b = parseInt(hex.substr(4,2), 16);
+		return [r,g,b];
+	},
+	RgbToHsl = function(rgb) {
+		var r = rgb[0]/255,
+			g = rgb[1]/255,
+			b = rgb[2]/255,
+			max = Math.max(r, g, b),
+			min = Math.min(r, g, b),
+			d, h, s, l = (max + min) / 2;
 
-		RgbFromHCM = function(hue, chroma, match) {
-			var rgb, hp = hue/60, x = chroma*(1 - Math.abs(hp%2 - 1));
-			if(hp < 1) rgb = [chroma,x,0];
-			else if(hp < 2) rgb = [x,chroma,0];
-			else if(hp < 3) rgb = [0,chroma,x];
-			else if(hp < 4) rgb = [0,x,chroma];
-			else if(hp < 5) rgb = [x,0,chroma];
-			else if(hp < 6) rgb = [chroma,0,x];
-			return [parseInt(255*(rgb[0]+match),10), parseInt(255*(rgb[1]+match),10), parseInt(255*(rgb[2]+match),10)];
-		},
-		HslToRgb = function(hsl) {
-			var h = hsl[0], s = hsl[1], l = hsl[2],
-				c = (1 - Math.abs(2*l - 1))*s,
-				m = l - .5*c, rgb = [];
-			return RgbFromHCM(h,c,m);
-		},
-		HsvToRgb = function(hsv) {
-			var h = hsv[0], s = hsv[1], v = hsv[2],
-				c = v*s, m = v - c, rgb = [];
-			return RgbFromHCM(h,c,m);
-		},
-		RgbToHex = function(rgb) {
-		    var hex = [], bit;
-		    if(rgb[3] == 0) return 'transparent';
-		    for(var i = 0; i < 3; i++) {
-		        bit = (rgb[i] - 0).toString(16);
-		        hex.push(bit.length == 1 ? ('0' + bit) : bit);
-		    }
-		    return '#' + hex.join('');
-		},
-		RgbToHsl = function(rgb) {
-			var min = Math.min(rgb[0], Math.min(rgb[1], rgb[2])),
-				max = Math.max(rgb[0], Math.max(rgb[1], rgb[2])),
-				d = max-min,
-				hsl = [], s, l = 0.5*(min + max);
-
-			if(min == max) s = 0;
-			if(l < 1/2)	s = (max-min)/(max+min);
-			else s = (max - min) / (2 - (max + min));
-
-			hsl[0] = utils.getHue(rgb,min,max,d); /* hue */
-			hsl[1] = s; /* saturation */
-			hsl[2] = l;   /* lightness */
-			return hsl;
-		},
-		getHue = function(rgb,min,max,d) {
-		    var hue; 
-		    if (max === min) {
-		        return 0;
-		    } else {
-				if(rgb[0] === max) hue = (rgb[1] - rgb[2]) / d; //between yellow & magenta
-				else if(rgb[1] === max) hue = 2 + (rgb[2] - rgb[0]) / d; //between cyan & yellow
-				else hue = 4 + (rgb[0] - rgb[1]) / delta; //between magenta & cyan
-
-				hue = parseInt(hue * 60, 10);
-				if(hue < 0) hue += 360;
+		if(max === min){
+			h = s = 0;
+		} else {
+			d = max - min;
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+			switch(max){
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2; break;
+				case b: h = (r - g) / d + 4; break;
 			}
-		    return hue;
-		};
+			h *= 60;
+		}
+		return [h,s,l];
+	},
 
-		return {
-			HslToRgb: HslToRgb,
-			HsvToRgb: HsvToRgb,
-			RgbToHex: RgbToHex,
-			RgbToHsl: RgbToHsl
-		};
-	})();
+	HexToHsl = function(hex) { return RgbToHsl(HexToRgb(hex)); },
+	HslToHex = function(hsl) { return RgbToHex(HslToRgb(hsl)); },
 
 
+	changeColor = function(hex, amt, pos) {
+		if((pos === 2 || pos === 1) && (amt < -1 || amt > 1)) return false;
+		var hsl = HexToHsl(hex);
+		hsl[pos] += amt;
 
+		if(hsl[1] < 0) hsl[1] = 0;
+		if(hsl[2] < 0) hsl[2] = 0;
+		if(hsl[1] > 1) hsl[1] = 1;
+		if(hsl[2] > 1) hsl[2] = 1;
+
+		if(hsl[0] < 0) hsl[0] += 360;
+		else if(hsl[0] >= 360) hsl[0] -= 360;
+		return HslToHex(hsl);
+	},
+
+	lighten = function(hex, amt) { return changeColor(hex, amt, 2); },
+	darken = function(hex, amt) { return lighten(hex, -amt); },
+	saturate = function(hex, amt) { return changeColor(hex, amt, 1); },
+	desaturate = function(hex, amt) { return changeColor(hex, -amt, 1); },
+	changeHue = function(hex, deg) { return changeColor(hex, deg, 0); },
+	complement = function(hex) { return changeColor(hex, 180, 0); };
 
 
 
@@ -134,7 +153,7 @@ jQuery.fn.iDropper = (function($) {
 	 * @param 	onChange 	Function that's triggered when the color selection changes
 	 * @param 	type 		String indicates which type of layout to use. Either 'bar' or 'ring'. Default 'bar'
 	 */
-	 var IDropper = function(opts) {
+	 IDropper = function(opts) {
 
 	 	
 	 	var self = this;
@@ -153,7 +172,7 @@ jQuery.fn.iDropper = (function($) {
 
 
 		/**
-		 * Element Reference
+		 * Element Reference, tabbed in tree heirarchy
 		 */
 		var $el = opts.$el,
 			$iD = $('<div/>').addClass('iD iD-layout-'+layout).appendTo($el),
@@ -235,7 +254,7 @@ jQuery.fn.iDropper = (function($) {
 
 			getHex: function(hsv) {
 				if(!hsv) hsv = activeHSV;
-				return utils.RgbToHex(utils.HsvToRgb(hsv));
+				return RgbToHex(HsvToRgb(hsv));
 			},
 			setPreview: function(hex) {
 				if(!hex) hex = fn.getHex();
@@ -287,6 +306,17 @@ jQuery.fn.iDropper = (function($) {
 		if(!fns) return false;
 		for(var i=0; i<fns.length; i++) fns[i](param);
 	};
+
+	/**
+	 * Exposed Color Math
+	 */
+	IDropper.lighten = lighten;
+	IDropper.darken = darken;
+	IDropper.saturate = saturate;
+	IDropper.desaturate = desaturate;
+	IDropper.changeHue = changeHue;
+	IDropper.complement = complement;
+
 
 
 	return function(opts) {
