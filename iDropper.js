@@ -70,9 +70,36 @@ jQuery.fn.iDropper = (function($) {
 		}
 		return [h,s,l];
 	},
+	RgbToHsv = function(rgb){
+		var r = rgb[0]/255,
+			g = rgb[1]/255,
+			b = rgb[2]/255,
+			max = Math.max(r, g, b),
+			min = Math.min(r, g, b),
+			h, s, v = max,
+			d = max - min;
+
+		s = max === 0 ? 0 : d / max;
+
+		if(max === min){
+			h = 0;
+		} else {
+			switch(max){
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2; break;
+				case b: h = (r - g) / d + 4; break;
+			}
+			h *= 60;
+		}
+		return [h, s, v];
+	},
 
 	HexToHsl = function(hex) { return RgbToHsl(HexToRgb(hex)); },
 	HslToHex = function(hsl) { return RgbToHex(HslToRgb(hsl)); },
+
+	HexToHsv = function(hex) { return RgbToHsv(HexToRgb(hex)); },
+	HsvToHex = function(hsv) { return RgbToHex(HsvToRgb(hsv)); },
+
 
 	/**
 	 * Forces the number to be within a range. Format is [lower, upper)
@@ -218,8 +245,20 @@ jQuery.fn.iDropper = (function($) {
 		 * Functions
 		 */
 		var fn = {
+			setColor: function(hex) {
+				try {
+					var hsv = HexToHsv(hex);
+					activeHSV = hsv;
+
+					if(layout === 'ring') fn.huedrag({theta: (270-hsv[0])/radiansToDegrees});
+					else fn.huedrag({y: size - size*hsv[0]/360});
+
+					fn.svdrag({x: size*hsv[1], y: size*(1-hsv[2])});
+					fn.setPreview(hex);
+				} catch(err) {}
+			},
 			setFlag: function(e, type) {
-				var tOffset = $(e.target).offset();
+				var tOffset = e.manual ? e : $(e.target).offset();
 				activeDropper = self;
 				dragInfo = { type: type, tx: tOffset.left, ty: tOffset.top };
 			},
@@ -239,19 +278,25 @@ jQuery.fn.iDropper = (function($) {
 				if(m.y < 0) m.y = 0;
 
 				if(layout === 'ring') {
-					if(m.y > ringSize) m.y = ringSize;
+					var x, y, t, d;
 
-					var x = m.x - ringRadius,
+					if(m.theta) {
+						t = m.theta;
+					} else {
+						if(m.y > ringSize) m.y = ringSize;
+
+						x = m.x - ringRadius;
 						y = m.y - ringRadius;
 
-					if(x === 0) x = .00000001;
-					if(y === 0) y = .00000001;
+						if(x === 0) x = .00000001;
+						if(y === 0) y = .00000001;
 
-					t= Math.atan(y/x);
-					d = 90 - t*radiansToDegrees;
+						t = Math.atan(y/x);
+						d = 90 - t*radiansToDegrees;
 
-					if((x>0 && y>0) || (x>0 && y < 0)) d+= 180;
-					activeHSV[0] = parseInt(d - 1);
+						if((x>0 && y>0) || (x>0 && y < 0)) d+= 180;
+						activeHSV[0] = parseInt(d - 1);
+					}
 
 					x = parseInt(hypotenuse*Math.cos(t) + ringRadius, 10);
 					y = parseInt(hypotenuse*Math.sin(t) + ringRadius, 10);
@@ -303,6 +348,8 @@ jQuery.fn.iDropper = (function($) {
 		this.bind('huedrag', fn['huedrag']);
 		this.bind('svdrag', fn['svdrag']);
 		this.bind('change', opts.onChange);
+
+		this.set = fn.setColor;
 
 
 		/**
