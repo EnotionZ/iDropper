@@ -74,28 +74,57 @@ jQuery.fn.iDropper = (function($) {
 	HexToHsl = function(hex) { return RgbToHsl(HexToRgb(hex)); },
 	HslToHex = function(hsl) { return RgbToHex(HslToRgb(hsl)); },
 
+	/**
+	 * Forces the number to be within a range. Format is [lower, upper)
+	 * @param 		n 			Number to force within range
+	 * @param 		lower 		Number lower range
+	 * @param 		upper 		Number upper range
+	 * @param 		wrap 		Boolean optional, determines if number should wrap around
+	 */
+	wrapInRange = function(n, lower, upper, wrap) {
+		if(lower > upper) { var tmp = lower; lower = upper; upper = tmp; }
 
-	changeColor = function(hex, amt, pos) {
-		if((pos === 2 || pos === 1) && (amt < -1 || amt > 1)) return false;
+		if(wrap) {
+			var d = upper - lower;		// normalize
+			n = (n-lower)%d;
+
+			if(n < 0) n += d;
+			else if(n > d) n -= d;
+			n += lower;
+		} else {
+			if(n < 0) n = lower;
+			else if(n > upper) n = upper;
+		}
+		return n;
+	},
+
+	/**
+	 * Performs color math on the given hex. If changes.wrap is set, will wrap lightness && saturation
+	 * @param 		hex 		String representing the color to change
+	 * @param 		changes 	Object where hash is either 'h', 's', or 'l' with amt value
+	 */
+	changeColor = function(hex, changes) {
+		if(typeof changes !== 'object') return null;
+
 		var hsl = HexToHsl(hex);
-		hsl[pos] += amt;
-
-		if(hsl[1] < 0) hsl[1] = 0;
-		if(hsl[2] < 0) hsl[2] = 0;
-		if(hsl[1] > 1) hsl[1] = 1;
-		if(hsl[2] > 1) hsl[2] = 1;
-
-		if(hsl[0] < 0) hsl[0] += 360;
-		else if(hsl[0] >= 360) hsl[0] -= 360;
+		if(typeof changes.h === 'number') {
+			hsl[0] = wrapInRange(hsl[0] + changes.h, 0, 360, true);
+		}
+		if(typeof changes.s === 'number') {
+			hsl[1] = wrapInRange(hsl[1] + changes.s, 0, 1, changes.wrap);
+		}
+		if(typeof changes.l === 'number') {
+			hsl[2] = wrapInRange(hsl[2] + changes.l, 0, 1, changes.wrap);
+		}
 		return HslToHex(hsl);
 	},
 
-	lighten = function(hex, amt) { return changeColor(hex, amt, 2); },
+	lighten = function(hex, amt) { return changeColor(hex, {'l': amt}); },
 	darken = function(hex, amt) { return lighten(hex, -amt); },
-	saturate = function(hex, amt) { return changeColor(hex, amt, 1); },
-	desaturate = function(hex, amt) { return changeColor(hex, -amt, 1); },
-	changeHue = function(hex, deg) { return changeColor(hex, deg, 0); },
-	complement = function(hex) { return changeColor(hex, 180, 0); };
+	saturate = function(hex, amt) { return changeColor(hex, {'s': amt}); },
+	desaturate = function(hex, amt) { return saturate(hex, -amt); },
+	changeHue = function(hex, deg) { return changeColor(hex, {'h': deg}); },
+	complement = function(hex) { return changeColor(hex, {'h': 180}); };
 
 
 
@@ -113,7 +142,6 @@ jQuery.fn.iDropper = (function($) {
 	$body.bind('mousemove.iDfn', iDfn['mousemove']);
 	$body.bind('mouseup.iDfn', iDfn['mouseup']);
 	$body.delegate('img.iD-pick', 'mousedown', iDfn['preventGhost']);
-
 
 
 
@@ -261,7 +289,7 @@ jQuery.fn.iDropper = (function($) {
 				$preview.css('background-color', hex).html(hex);
 				self.trigger('change', hex);
 			}
-		}
+		};
 
 		/**
 		 * Event binding and delegation
@@ -316,6 +344,7 @@ jQuery.fn.iDropper = (function($) {
 	IDropper.desaturate = desaturate;
 	IDropper.changeHue = changeHue;
 	IDropper.complement = complement;
+	IDropper.changeColor = changeColor;
 
 
 

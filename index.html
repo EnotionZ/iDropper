@@ -15,7 +15,7 @@
 <div id="idrop1" class="idrop_example">
 	<p>
 		<ul>
-			<li>IDropper with Callback on Color: <span id="id1_change"></span></li>
+			<li>IDropper Callback with color: <span id="id1_change"></span></li>
 			<li>Hue-shift 180: <span id="id1_hueshift"></span></li>
 			<li>Lighten by 25%: <span id="id1_lighten"></span></li>
 			<li>Darken by 25%: <span id="id1_darken"></span></li>
@@ -46,18 +46,25 @@ var $id1Change = $('#id1_change'),
 $('#idrop1').iDropper({
 	onChange: function(hex) {
 		var
-		hueshift = IDropper.changeHue(hex, 180),
-		darken = IDropper.darken(hex, .25),
-		lighten = IDropper.lighten(hex, .25),
+		hue = IDropper.changeHue(hex, 180),
+		dar = IDropper.darken(hex, .25),
+		lig = IDropper.lighten(hex, .25),
 		sat = IDropper.saturate(hex, .25),
-		desat = IDropper.desaturate(hex, .25);
+		des = IDropper.desaturate(hex, .25);
 
-		$id1Change.html(hex).css('background',hex);
-		$id1Hueshift.html(hueshift).css('background',hueshift);
-		$id1Lighten.html(lighten).css('background', lighten);
-		$id1Darken.html(darken).css('background', darken);
-		$id1Saturate.html(sat).css('background', sat);
-		$id1Desaturate.html(desat).css('background', desat);
+		hexText = IDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		hueText = IDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		darText = IDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		ligText = IDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		satText = IDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		desText = IDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+
+		$id1Change.html(hex).css({'background-color': hex, 'color': hexText});
+		$id1Hueshift.html(hue).css({'background-color': hue, 'color': hueText});
+		$id1Lighten.html(lig).css({'background-color': lig, 'color': ligText});
+		$id1Darken.html(dar).css({'background-color': dar, 'color': darText});
+		$id1Saturate.html(sat).css({'background-color': sat, 'color': satText});
+		$id1Desaturate.html(des).css({'background-color': des, 'color': desText});
 	}
 });
 $('#idrop2').iDropper({ layout: 'ring', size: 128});
