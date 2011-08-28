@@ -111,10 +111,10 @@ jQuery.fn.iDropper = (function($) {
 			hsl[0] = wrapInRange(hsl[0] + changes.h, 0, 360, true);
 		}
 		if(typeof changes.s === 'number') {
-			hsl[1] = wrapInRange(hsl[1] + changes.s, 0, 1, changes.wrap);
+			hsl[1] = wrapInRange(hsl[1] + changes.s, 0, 1, changes.wrap || changes.swrap);
 		}
 		if(typeof changes.l === 'number') {
-			hsl[2] = wrapInRange(hsl[2] + changes.l, 0, 1, changes.wrap);
+			hsl[2] = wrapInRange(hsl[2] + changes.l, 0, 1, changes.wrap || changes.lwrap);
 		}
 		return HslToHex(hsl);
 	},

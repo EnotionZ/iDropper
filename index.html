@@ -7,6 +7,11 @@
 		html, body { height: 100%; }
 		body { font: normal 12px/16px arial;}
 		.idrop_example { float: left; margin-right: 50px; }
+
+		#idrop1 ul { list-style-type: none; padding: 0 0 0 12px; }
+		#idrop1 ul > li { margin-bottom: 2px; }
+		#idrop1 ul label { display: inline-block; width: 180px; }
+		#idrop1 ul span { display: inline-block; width: 60px; text-align: center; }
 	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 </head>
@@ -15,12 +20,18 @@
 <div id="idrop1" class="idrop_example">
 	<p>
 		<ul>
-			<li>IDropper Callback with color: <span id="id1_change"></span></li>
-			<li>Hue-shift 180: <span id="id1_hueshift"></span></li>
-			<li>Lighten by 25%: <span id="id1_lighten"></span></li>
-			<li>Darken by 25%: <span id="id1_darken"></span></li>
-			<li>Saturate by 25%: <span id="id1_sat"></span></li>
-			<li>Desaturate by 25%: <span id="id1_desat"></span></li>
+			<li><label>IDropper Callback with color: </label>
+				<span id="id1_change"></span></li>
+			<li><label>Hue-shift 180: </label>
+				<span id="id1_hueshift"></span></li>
+			<li><label>Lighten by 25%:</label>
+				<span id="id1_lighten"></span></li>
+			<li><label>Darken by 25%: </label>
+				<span id="id1_darken"></span></li>
+			<li><label>Saturate by 25%: </label>
+				<span id="id1_sat"></span></li>
+			<li><label>Desaturate by 25%: </label>
+				<span id="id1_desat"></span></li>
 		</ul>
 	</p>
 </div>
@@ -50,14 +61,14 @@ $('#idrop1').iDropper({
 		dar = IDropper.darken(hex, .25),
 		lig = IDropper.lighten(hex, .25),
 		sat = IDropper.saturate(hex, .25),
-		des = IDropper.desaturate(hex, .25);
+		des = IDropper.desaturate(hex, .25),
 
 		hexText = IDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
 		hueText = IDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
 		darText = IDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
 		ligText = IDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
 		satText = IDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		desText = IDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		desText = IDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true});
 
 		$id1Change.html(hex).css({'background-color': hex, 'color': hexText});
 		$id1Hueshift.html(hue).css({'background-color': hue, 'color': hueText});
