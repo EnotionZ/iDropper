@@ -164,7 +164,12 @@ jQuery.fn.iDropper = (function($) {
 	var iDfn = {
 		preventGhost: function() { return false; }, // Stops bubbling, prevents dragging image ghost
 		mouseup: function() { activeDropper = null; },
-		mousemove: function(e) { if(activeDropper){ activeDropper.trigger('mousedrag', e); } }
+		mousemove: function(e) {
+			if(activeDropper){
+				activeDropper.trigger('mousedrag', e);
+				return false;
+			}
+		}
 	};
 	$body.bind('mousemove.iDfn', iDfn['mousemove']);
 	$body.bind('mouseup.iDfn', iDfn['mouseup']);
@@ -196,7 +201,10 @@ jQuery.fn.iDropper = (function($) {
 		fullRSize = 482,										// full ring size, original width of hue ring
 		ringHalf = 50/2,										// Hue ring's (outter_radius - inner_radius)/2
 		indicatorPercent = (fullRSize/2-ringHalf)/fullRSize,	// percent of hue ring's width from center point where indicator sits
-		radiansToDegrees = 360/(2*Math.PI);
+		radiansToDegrees = 360/(2*Math.PI),
+
+		IE = /MSIE (\d+\.\d+);/.test(navigator.userAgent) ? parseFloat(RegExp.$1) : NaN,
+		IE6 = IE === 6;
 
 
 
@@ -232,13 +240,12 @@ jQuery.fn.iDropper = (function($) {
 		var $el = opts.$el,
 			$iD = $('<div/>').addClass('iD iD-layout-'+layout).appendTo($el),
 				$svContainer = $('<div/>').addClass('iD-sv-container').appendTo($iD),
-					$svPick = $('<img/>').addClass('iD-pick iD-sv-pick').attr('src',URL.SATVAL).appendTo($svContainer),
+					$svImg = $('<img/>').addClass('iD-img iD-pick iD-sv-pick').attr('src',URL.SATVAL).appendTo($svContainer),
 					$colorIndicator = $('<div/>').addClass('iD-indicator-color').appendTo($svContainer),
 				$hueContainer = $('<div/>').addClass('iD-hue-container').appendTo($iD),
-					$huePick = $('<img/>').addClass('iD-pick iD-hue-pick').attr('src',(layout === 'ring' ? URL.HUERING : URL.HUEBAR)).appendTo($hueContainer),
+					$hueImg = $('<img/>').addClass('iD-img iD-pick iD-hue-pick').attr('src',(layout === 'ring' ? URL.HUERING : URL.HUEBAR)).appendTo($hueContainer),
 					$hueIndicator = $('<div/>').addClass('iD-indicator-hue').appendTo($hueContainer),
 				$preview = $('<div/>').addClass('iD-preview').appendTo($iD);
-
 
 
 		/**
@@ -320,7 +327,7 @@ jQuery.fn.iDropper = (function($) {
 				if(m.x > size) m.x = size;
 				if(m.y > size) m.y = size;
 
-				$colorIndicator.css({ left: m.x, top: m.y });
+				$colorIndicator.css({ left: m.x-3, top: m.y-3 });
 				activeHSV[1] = m.x/size;
 				activeHSV[2] = 1-m.y/size;
 			},
@@ -355,8 +362,8 @@ jQuery.fn.iDropper = (function($) {
 		/**
 		 * Final initializing and such
 		 */
+		var hueWidth = parseInt(size/13,10);
 		if(typeof opts.size === 'number') {
-			var hueWidth = parseInt(size/13,10);
 			$svContainer.css({ width: size, height: size });
 
 			if(layout === 'ring') {
@@ -367,6 +374,21 @@ jQuery.fn.iDropper = (function($) {
 				$hueIndicator.width(hueWidth);
 			}
 		}
+		if(layout === 'ring') {
+			$iD.css({ width: ringSize, height: ringSize }).prepend($hueContainer);
+		} else {
+			$iD.css({ width: size + hueWidth + 12, height: size + hueWidth + 12 });
+		}
+		
+		if(IE6) {
+			if(layout === 'ring') {
+				$('<span/>').addClass('iD-ie6huefix iD-pick iD-hue-pick').appendTo($hueContainer).height(ringSize);
+				$hueImg.remove()
+			}
+			$('<span/>').addClass('iD-ie6svfix iD-pick iD-sv-pick').appendTo($svContainer).height(size);
+			$svImg.remove()
+		}
+		
 
 		fn.setPreview();
 
@@ -393,7 +415,8 @@ jQuery.fn.iDropper = (function($) {
 	IDropper.complement = complement;
 	IDropper.changeColor = changeColor;
 
-
+	IDropper.IE = IE;
+	IDropper.IE6 = IE6;
 
 	return function(opts) {
 		// iDropper should be instantiated uniquely and only once
