@@ -295,14 +295,14 @@ jQuery.fn.iDropper = (function($) {
 						x = m.x - ringRadius;
 						y = m.y - ringRadius;
 
-						if(x === 0) x = .00000001;
-						if(y === 0) y = .00000001;
+						if(x === 0) x = 0.00000001;
+						if(y === 0) y = 0.00000001;
 
 						t = Math.atan(y/x);
 						d = 90 - t*radiansToDegrees;
 
 						if((x>0 && y>0) || (x>0 && y < 0)) d+= 180;
-						activeHSV[0] = parseInt(d - 1);
+						activeHSV[0] = parseInt(d - 1, 10);
 					}
 
 					x = parseInt(hypotenuse*Math.cos(t) + ringRadius, 10);
@@ -339,7 +339,7 @@ jQuery.fn.iDropper = (function($) {
 			setPreview: function(hex) {
 				if(!hex) hex = fn.getHex();
 				$preview.css('background-color', hex).html(hex);
-				self.trigger('change', hex);
+				self.trigger('change', hex, opts.$el);
 			}
 		};
 
@@ -383,10 +383,10 @@ jQuery.fn.iDropper = (function($) {
 		if(IE6) {
 			if(layout === 'ring') {
 				$('<span/>').addClass('iD-ie6huefix iD-pick iD-hue-pick').appendTo($hueContainer).height(ringSize);
-				$hueImg.remove()
+				$hueImg.remove();
 			}
 			$('<span/>').addClass('iD-ie6svfix iD-pick iD-sv-pick').appendTo($svContainer).height(size);
-			$svImg.remove()
+			$svImg.remove();
 		}
 		
 
@@ -398,10 +398,16 @@ jQuery.fn.iDropper = (function($) {
 		if(!this.hooks[event]) this.hooks[event] = [];
 		this.hooks[event].push(fn);
 	};
-	IDropper.prototype.trigger = function(event, param) {
+	IDropper.prototype.trigger = function(event, param, context) {
 		var fns = this.hooks[event];
 		if(!fns) return false;
-		for(var i=0; i<fns.length; i++) fns[i](param);
+		for(var i=0; i<fns.length; i++) {
+			if(context) {
+				fns[i].call(context,param);
+			} else {
+				fns[i](param);
+			}
+		}
 	};
 
 	/**
