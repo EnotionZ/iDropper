@@ -425,12 +425,13 @@ jQuery.fn.iDropper = (function($) {
 	IDropper.IE6 = IE6;
 
 	return function(opts) {
-		// iDropper should be instantiated uniquely and only once
-		var $el = this;
-		if($el.length>1) $el = $el.eq(0);
+		var $els = this;
+		return $els.each(function(i){
+			var $el = $els.eq(i), settings = { $el: $el };
 
-		opts.$el = $el;
-		$el.iDropper = new IDropper(opts);
+			$.extend(settings, opts);
+			$el.iDropper = new IDropper(settings);
+		});
 	};
 
 })(jQuery);
