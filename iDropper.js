@@ -402,8 +402,8 @@
 			$svImg.remove();
 		}
 		
-
-		fn.setPreview();
+		opts.default = opts.default || '#ff0000';
+		fn.setColor(opts.default);
 
 	};
 	IDropper.prototype.bind = function(event, fn) {

@@ -100,6 +100,7 @@ var $id1 = $('#idrop1'),
 	$id3 = $('#idrop3');
 
 $id1.iDropper({
+	default: '#b4bb83',
 	onChange: function(hex) {
 		var
 		hue = $.iDropper.changeHue(hex, 180),
@@ -127,7 +128,7 @@ $id1Set.keyup(function(){ $id1.iDropper.set($id1Set.val()); });
 $id2Set.keyup(function(){ $id2.iDropper.set($id2Set.val()); });
 
 
-$id2.iDropper({ layout: 'ring', size: 128});
+$id2.iDropper({ layout: 'ring', default: '#7dd1c3', size: 128});
 $id3.iDropper({ size: 128 });
 </script>
 </body>
