@@ -1,6 +1,4 @@
-var IDropper;
-jQuery.fn.iDropper = (function($) {
-
+(function($) {
 
 	/**
 	 * Color math and other utility functions
@@ -154,6 +152,21 @@ jQuery.fn.iDropper = (function($) {
 	complement = function(hex) { return changeColor(hex, {'h': 180}); };
 
 
+	/**
+	 * Utilities and stuff
+	 */
+	$.iDropper = {
+		lighten: lighten,
+		darken: darken,
+		saturate: saturate,
+		desaturate: desaturate,
+		changeHue: changeHue,
+		complement: complement,
+		changeColor: changeColor
+	};
+
+
+
 
 
 	/**
@@ -216,7 +229,7 @@ jQuery.fn.iDropper = (function($) {
 	 * @param 	onChange 	Function that's triggered when the color selection changes
 	 * @param 	type 		String indicates which type of layout to use. Either 'bar' or 'ring'. Default 'bar'
 	 */
-	 IDropper = function(opts) {
+	 var IDropper = function(opts) {
 
 	 	
 	 	var self = this;
@@ -410,21 +423,7 @@ jQuery.fn.iDropper = (function($) {
 		}
 	};
 
-	/**
-	 * Exposed Color Math
-	 */
-	IDropper.lighten = lighten;
-	IDropper.darken = darken;
-	IDropper.saturate = saturate;
-	IDropper.desaturate = desaturate;
-	IDropper.changeHue = changeHue;
-	IDropper.complement = complement;
-	IDropper.changeColor = changeColor;
-
-	IDropper.IE = IE;
-	IDropper.IE6 = IE6;
-
-	return function(opts) {
+	$.fn.iDropper = function(opts) {
 		var $els = this;
 		return $els.each(function(i){
 			var $el = $els.eq(i), settings = { $el: $el };

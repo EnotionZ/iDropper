@@ -102,18 +102,18 @@ var $id1 = $('#idrop1'),
 $id1.iDropper({
 	onChange: function(hex) {
 		var
-		hue = IDropper.changeHue(hex, 180),
-		dar = IDropper.darken(hex, .25),
-		lig = IDropper.lighten(hex, .25),
-		sat = IDropper.saturate(hex, .25),
-		des = IDropper.desaturate(hex, .25),
+		hue = $.iDropper.changeHue(hex, 180),
+		dar = $.iDropper.darken(hex, .25),
+		lig = $.iDropper.lighten(hex, .25),
+		sat = $.iDropper.saturate(hex, .25),
+		des = $.iDropper.desaturate(hex, .25),
 
-		hexText = IDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		hueText = IDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		darText = IDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		ligText = IDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		satText = IDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		desText = IDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true});
+		hexText = $.iDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		hueText = $.iDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		darText = $.iDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		ligText = $.iDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		satText = $.iDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+		desText = $.iDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true});
 
 		$id1Change.html(hex).css({'background-color': hex, 'color': hexText});
 		$id1Hueshift.html(hue).css({'background-color': hue, 'color': hueText});
