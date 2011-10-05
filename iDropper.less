@@ -1,5 +1,12 @@
+
+
 .iD {
 	margin: 0; padding: 0;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 
 	.iD-pick { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 1; }
 
@@ -13,12 +20,11 @@
 		margin-right: 10px;
 
 		.iD-indicator-color {
-			border: 1px solid #000;
 			position: absolute;
-			width: 6px; height: 6px;
-			line-height: 6px;
 			left: -9999px; z-index: 3;
-			border-radius: 3px;
+			width: 19px; height: 18px;
+			margin-left: -7px; margin-top: -7px;
+			background: transparent url('images/selectiongfx.png') no-repeat 0 0;
 		}
 	}
 	.iD-hue-container {
@@ -34,7 +40,7 @@
 		float: left;
 		clear: left;
 		height: 18px;
-		width: 100%;
+		width: 50px;
 		margin-top: 10px;
 	}
 }
@@ -47,36 +53,42 @@
 		position: absolute; left: 0; top: 0;
 		width: 482px; height: 482px;
 		.iD-indicator-hue {
-			position: absolute; width: 7px; height: 7px;
+			position: absolute;
 			left: 50%; top: 2px; z-index: 3;
-			margin-top: -3px; margin-left: -3px;
-			line-height: 6px;
-			border-radius: 3px;
-			border: 1px solid #000;
+			width: 19px; height: 18px;
+			margin-left: -9px; margin-top: -9px;
+			background: transparent url('images/selectiongfx.png') no-repeat 0 0;
 		}
 	}
 	.iD-sv-container {
 		position: absolute; z-index: 1;
 		left: 23.443983%; top: 23.443983%;
 	}
-	.iD-preview {
+	.iD-preview,
+	.iD-input-container {
 		position: absolute;
 		bottom: -30px;
 	}
+	.iD-input-container { left: 50px; }
 }
 
 .iD-layout-bar {
 	.iD-hue-container {
 		.iD-indicator-hue {
 			position: absolute; width: 20px; height: 1px;
-			top: 0; left: 0; background: #000;
-
-			&:before, &:after {
-				content: ""; position: absolute; top: 0; width: 4px; height: 1px; background: #000;
-			}
-			&:before { left: -6px; }
-			&:after { right: -6px; }
+			z-index: 1; top: 0; right: -5px;
+			width: 12px; height: 10px; margin-top: -6px;
+			background: transparent url('images/selectiongfx.png') no-repeat 0 100%;
 		}
+	}
+}
+
+.iD-input-container {
+	float: left; margin: 10px 0 0 10px; padding: 0;
+	.iD-input-field {
+		margin: -1px 0 0; padding: 0;
+		border: 1px solid #333;
+		height: 17px; width: 70px;
 	}
 }
 

@@ -258,7 +258,9 @@
 				$hueContainer = $('<div/>').addClass('iD-hue-container').appendTo($iD),
 					$hueImg = $('<img/>').addClass('iD-img iD-pick iD-hue-pick').attr('src',(layout === 'ring' ? URL.HUERING : URL.HUEBAR)).appendTo($hueContainer),
 					$hueIndicator = $('<div/>').addClass('iD-indicator-hue').appendTo($hueContainer),
-				$preview = $('<div/>').addClass('iD-preview').appendTo($iD);
+				$preview = $('<div/>').addClass('iD-preview').appendTo($iD),
+				$inputContainer = $('<div/>').addClass('iD-input-container').appendTo($iD),
+					$input = $('<input/>').addClass("iD-input-field").attr("type", "text").appendTo($inputContainer);
 
 
 		/**
@@ -345,13 +347,18 @@
 				activeHSV[2] = 1-m.y/size;
 			},
 
+			inputSet: function() {
+				fn.setColor($input.val());
+			},
+
 			getHex: function(hsv) {
 				if(!hsv) hsv = activeHSV;
 				return RgbToHex(HsvToRgb(hsv));
 			},
 			setPreview: function(hex) {
 				if(!hex) hex = fn.getHex();
-				$preview.css('background-color', hex).html(hex);
+				$preview.css('background-color', hex)
+				$input.val(hex);
 				self.trigger('change', hex, opts.$el);
 			}
 		};
@@ -361,7 +368,8 @@
 		 */
 		var events = [
 			['.iD-hue-pick', 'mousedown', 'setHueFlag'],
-			['.iD-sv-pick', 'mousedown', 'setSVFlag']
+			['.iD-sv-pick', 'mousedown', 'setSVFlag'],
+			['.iD-input-field', 'keyup', 'inputSet']
 		];
 		for(var i=0; i<events.length; i++) $el.delegate(events[i][0], events[i][1], fn[events[i][2]]);
 		this.bind('mousedrag', fn['mousedrag']);
@@ -384,13 +392,14 @@
 				$hueContainer.css({ width: ringSize, height: ringSize });
 			} else {
 				$hueContainer.css({ width: hueWidth, height: size });
-				$hueIndicator.width(hueWidth);
 			}
 		}
+
 		if(layout === 'ring') {
-			$iD.css({ width: ringSize, height: ringSize }).prepend($hueContainer);
+			$iD.prepend($hueContainer)
+				//.css({ width: ringSize, height: ringSize });
 		} else {
-			$iD.css({ width: size + hueWidth + 12, height: size + hueWidth + 12 });
+			//$iD.css({ width: size + hueWidth + 12, height: size + hueWidth + 12 });
 		}
 		
 		if(IE6) {
@@ -429,7 +438,7 @@
 			var $el = $els.eq(i), settings = { $el: $el };
 
 			$.extend(settings, opts);
-			$el.iDropper = new IDropper(settings);
+			$el.data('iDropper', new IDropper(settings));
 		});
 	};
 
