@@ -13,7 +13,13 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 2;
+  cursor: default;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 .iD .iD-sv-container {
   float: left;
@@ -27,7 +33,7 @@
 .iD .iD-sv-container .iD-indicator-color {
   position: absolute;
   left: -9999px;
-  z-index: 3;
+  z-index: 1;
   width: 19px;
   height: 18px;
   margin-left: -7px;
@@ -67,7 +73,7 @@
   position: absolute;
   left: 50%;
   top: 2px;
-  z-index: 3;
+  z-index: 1;
   width: 19px;
   height: 18px;
   margin-left: -9px;
