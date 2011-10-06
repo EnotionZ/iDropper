@@ -1,0 +1,128 @@
+.iD {
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.iD .iD-pick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.iD .iD-sv-container {
+  float: left;
+  width: 256px;
+  height: 256px;
+  background: #ff0000;
+  position: relative;
+  z-index: 1;
+  margin-right: 10px;
+}
+.iD .iD-sv-container .iD-indicator-color {
+  position: absolute;
+  left: -9999px;
+  z-index: 3;
+  width: 19px;
+  height: 18px;
+  margin-left: -7px;
+  margin-top: -7px;
+  background: transparent url('images/selectiongfx.png') no-repeat 0 0;
+}
+.iD .iD-hue-container {
+  float: left;
+  width: 20px;
+  height: 256px;
+  position: relative;
+  z-index: 0;
+}
+.iD .iD-preview {
+  position: relative;
+  float: left;
+  clear: left;
+  height: 18px;
+  width: 50px;
+  margin-top: 10px;
+}
+.iD-layout-ring {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 482px;
+  height: 482px;
+}
+.iD-layout-ring .iD-hue-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 482px;
+  height: 482px;
+}
+.iD-layout-ring .iD-hue-container .iD-indicator-hue {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  z-index: 3;
+  width: 19px;
+  height: 18px;
+  margin-left: -9px;
+  margin-top: -9px;
+  background: transparent url('images/selectiongfx.png') no-repeat 0 0;
+}
+.iD-layout-ring .iD-sv-container {
+  position: absolute;
+  z-index: 1;
+  left: 23.443983%;
+  top: 23.443983%;
+}
+.iD-layout-ring .iD-preview, .iD-layout-ring .iD-input-container {
+  position: absolute;
+  bottom: -30px;
+}
+.iD-layout-ring .iD-input-container {
+  left: 50px;
+}
+.iD-layout-bar .iD-hue-container .iD-indicator-hue {
+  position: absolute;
+  width: 20px;
+  height: 1px;
+  z-index: 1;
+  top: 0;
+  right: -5px;
+  width: 12px;
+  height: 10px;
+  margin-top: -6px;
+  background: transparent url('images/selectiongfx.png') no-repeat 0 100%;
+}
+.iD-input-container {
+  float: left;
+  margin: 10px 0 0 10px;
+  padding: 0;
+}
+.iD-input-container .iD-input-field {
+  margin: -1px 0 0;
+  padding: 0;
+  border: 1px solid #333;
+  height: 17px;
+  width: 70px;
+}
+.iD-img-sv {
+  background-image: url('images/sloverlay.png');
+}
+.iD-img-huebar {
+  background-image: url('images/hue.png');
+}
+.iD-img-huering {
+  background-image: url('images/hue_ring.png');
+}
+*html .iD-ie6svfix {
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', sizingMethod='scale', src='images/sloverlay.png');
+}
+*html .iD-ie6huefix {
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', sizingMethod='scale', src='images/hue_ring.png');
+}
