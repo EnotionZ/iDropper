@@ -266,6 +266,7 @@
 					$input = $('<input/>').addClass("iD-input-field").attr("type", "text").appendTo($inputContainer);
 
 
+
 		/**
 		 * Functions
 		 */
@@ -286,23 +287,28 @@
 			},
 			setFlag: function(e, type) {
 				var tOffset = e.manual ? e : $(e.target).offset();
+				tOffset.left -= $body.scrollLeft();
+				tOffset.top -= $body.scrollTop();
 				activeDropper = self;
 				dragInfo = { type: type, tx: tOffset.left, ty: tOffset.top };
 			},
 			setSVFlag: function(e) { fn.setFlag(e,'sv'); fn.mousedrag(e); },
 			setHueFlag: function(e) { fn.setFlag(e,'hue'); fn.mousedrag(e); },
 
+			/**
+			 * Mouse drag is on the body
+			 */
 			mousedrag: function(e) {
 				var m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
 
-				if(m.x<0) m.x=0;
+				if(m.x < 0) m.x = 0;
+				if(m.y < 0) m.y = 0;
 
 				if(dragInfo.type === 'hue') self.trigger('huedrag', m);
 				else if(dragInfo.type === 'sv') self.trigger('svdrag', m);
 				fn.setPreview();
 			},
 			huedrag: function(m) {
-				if(m.y < 0) m.y = 0;
 
 				if(layout === 'ring') {
 					var x, y, t, d;
@@ -342,8 +348,6 @@
 				$svContainer.css('background-color', fn.getHex([activeHSV[0], 1, 1]));
 			},
 			svdrag: function(m) {
-				if(m.x < 0) m.x = 0;
-				if(m.y < 0) m.y = 0;
 				if(m.x > size) m.x = size;
 				if(m.y > size) m.y = size;
 
