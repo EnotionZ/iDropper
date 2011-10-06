@@ -87,6 +87,9 @@
 .iD-layout-ring .iD-input-container {
   left: 50px;
 }
+.iD-layout-bar .iD-hue-container {
+  min-width: 12px;
+}
 .iD-layout-bar .iD-hue-container .iD-indicator-hue {
   position: absolute;
   width: 20px;
@@ -110,6 +113,17 @@
   border: 1px solid #333;
   height: 17px;
   width: 70px;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+.iD-img {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
 }
 .iD-img-sv {
   background-image: url('images/sloverlay.png');
