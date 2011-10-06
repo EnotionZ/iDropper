@@ -217,7 +217,8 @@
 		radiansToDegrees = 360/(2*Math.PI),
 
 		IE = /MSIE (\d+\.\d+);/.test(navigator.userAgent) ? parseFloat(RegExp.$1) : NaN,
-		IE6 = IE === 6;
+		IE6 = IE === 6,
+		keysToAccept = [8, 37,38,39,40, 48,49,50,51,52,53,54,55,56,57,65,66,67,68,69,70, 86];
 
 
 
@@ -253,11 +254,13 @@
 		var $el = opts.$el,
 			$iD = $('<div/>').addClass('iD iD-layout-'+layout).appendTo($el),
 				$svContainer = $('<div/>').addClass('iD-sv-container').appendTo($iD),
-					$svImg = $('<img/>').addClass('iD-img iD-pick iD-sv-pick').attr('src',URL.SATVAL).appendTo($svContainer),
-					$colorIndicator = $('<div/>').addClass('iD-indicator-color').appendTo($svContainer),
+					$svImg = $('<img/>').addClass('iD-img').attr('src',URL.SATVAL).appendTo($svContainer),
+					$colorCover = $('<div/>').addClass('iD-cover-color iD-pick iD-sv-pick').appendTo($svContainer),
+						$colorIndicator = $('<div/>').addClass('iD-indicator-color').appendTo($colorCover),
 				$hueContainer = $('<div/>').addClass('iD-hue-container').appendTo($iD),
-					$hueImg = $('<img/>').addClass('iD-img iD-pick iD-hue-pick').attr('src',(layout === 'ring' ? URL.HUERING : URL.HUEBAR)).appendTo($hueContainer),
-					$hueIndicator = $('<div/>').addClass('iD-indicator-hue').appendTo($hueContainer),
+					$hueImg = $('<img/>').addClass('iD-img').attr('src',(layout === 'ring' ? URL.HUERING : URL.HUEBAR)).appendTo($hueContainer),
+					$hueCover = $('<div/>').addClass('iD-cover-hue iD-pick iD-hue-pick').appendTo($hueContainer),
+						$hueIndicator = $('<div/>').addClass('iD-indicator-hue').appendTo($hueCover),
 				$preview = $('<div/>').addClass('iD-preview').appendTo($iD),
 				$inputContainer = $('<div/>').addClass('iD-input-container').appendTo($iD),
 					$input = $('<input/>').addClass("iD-input-field").attr("type", "text").appendTo($inputContainer);
@@ -267,8 +270,10 @@
 		 * Functions
 		 */
 		var fn = {
-			setColor: function(hex) {
-				try {
+			isValidHex: function(hex) { return typeof hex === "string" && hex.match(/^#?[0-9a-fA-F]{6}$/i); },
+			setColor: function(hex, disableInputUpdate) {
+				if(fn.isValidHex(hex)) {
+
 					var hsv = HexToHsv(hex);
 					activeHSV = hsv;
 
@@ -276,8 +281,8 @@
 					else fn.huedrag({y: size - size*hsv[0]/360});
 
 					fn.svdrag({x: size*hsv[1], y: size*(1-hsv[2])});
-					fn.setPreview(hex);
-				} catch(err) {}
+					fn.setPreview(hex, disableInputUpdate);
+				}
 			},
 			setFlag: function(e, type) {
 				var tOffset = e.manual ? e : $(e.target).offset();
@@ -347,19 +352,26 @@
 				activeHSV[2] = 1-m.y/size;
 			},
 
-			inputSet: function() {
-				fn.setColor($input.val());
+			inputKeydown: function(e) {
+				if(keysToAccept.indexOf(e.keyCode) === -1) return false;
+			},
+			inputKeyup: function(e) {
+				fn.setColor($input.val(), true);
+				return false;
 			},
 
 			getHex: function(hsv) {
 				if(!hsv) hsv = activeHSV;
 				return RgbToHex(HsvToRgb(hsv));
 			},
-			setPreview: function(hex) {
+			setPreview: function(hex, setPreview) {
 				if(!hex) hex = fn.getHex();
-				$preview.css('background-color', hex)
-				$input.val(hex);
-				self.trigger('change', hex, opts.$el);
+				if(fn.isValidHex(hex)) {
+					if(hex[0] !== "#") hex = "#"+hex;
+					$preview.css('background-color', hex)
+					if(!setPreview) $input.val(hex);
+					self.trigger('change', hex, opts.$el);
+				}
 			}
 		};
 
@@ -369,7 +381,8 @@
 		var events = [
 			['.iD-hue-pick', 'mousedown', 'setHueFlag'],
 			['.iD-sv-pick', 'mousedown', 'setSVFlag'],
-			['.iD-input-field', 'keyup', 'inputSet']
+			['.iD-input-field', 'keyup', 'inputKeyup'],
+			['.iD-input-field', 'keydown', 'inputKeydown']
 		];
 		for(var i=0; i<events.length; i++) $el.delegate(events[i][0], events[i][1], fn[events[i][2]]);
 		this.bind('mousedrag', fn['mousedrag']);
