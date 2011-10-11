@@ -342,7 +342,8 @@
 					$hueIndicator.css({ top: y, left: x });
 				} else if(layout === 'bar') {
 					if(m.y > size) m.y = size-1;
-					activeHSV[0] = parseInt(360*(1 - m.y/size), 10) - 1;
+					activeHSV[0] = parseInt(360*(1 - m.y/size), 10);
+					if(activeHSV[0] >= 360) activeHSV[0] = 359;
 					$hueIndicator.css({ top: m.y });
 				}
 				$svContainer.css('background-color', fn.getHex([activeHSV[0], 1, 1]));
@@ -428,8 +429,8 @@
 			$svImg.remove();
 		}
 		
-		opts.default = opts.default || '#ff0000';
-		fn.setColor(opts.default);
+		opts.color = opts.color || '#ff0000';
+		fn.setColor(opts.color);
 
 	};
 	IDropper.prototype.bind = function(event, fn) {
