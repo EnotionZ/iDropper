@@ -5,6 +5,8 @@
 	 */
 	var
 
+	isValidHex = function(hex) { return typeof hex === "string" && hex.match(/^#?[0-9a-fA-F]{6}$/i); },
+
 	RgbFromHCM = function(hue, chroma, match) {
 		var rgb, hp = hue/60, x = chroma*(1 - Math.abs(hp%2 - 1));
 		if(hp < 1) rgb = [chroma,x,0];
@@ -26,7 +28,7 @@
 			c = v*s, m = v - c, rgb = [];
 		return RgbFromHCM(h,c,m);
 	},
-	RgbToHex = function(rgb) {
+	_RgbToHex = function(rgb) {
 		var hex = [], bit;
 		if(rgb[3] === 0) return 'transparent';
 		for(var i = 0; i < 3; i++) {
@@ -34,6 +36,19 @@
 			hex.push(bit.length == 1 ? ('0' + bit) : bit);
 		}
 		return '#' + hex.join('');
+	},
+	RgbToHex = function(rgb) {
+		var match;
+		if(typeof rgb === "string") {
+			if(isValidHex(rgb)) return rgb;
+			match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+			if(match) {
+				match.shift();
+				rgb = match;
+			}
+		}
+		if(typeof rgb !== "object" || !(rgb instanceof Array)) return null;
+		else return _RgbToHex(rgb);
 	},
 	HexToRgb = function(hex) {
 		hex = hex.replace(/#/g,'');
@@ -93,10 +108,10 @@
 	},
 
 	HexToHsl = function(hex) { return RgbToHsl(HexToRgb(hex)); },
-	HslToHex = function(hsl) { return RgbToHex(HslToRgb(hsl)); },
+	HslToHex = function(hsl) { return _RgbToHex(HslToRgb(hsl)); },
 
 	HexToHsv = function(hex) { return RgbToHsv(HexToRgb(hex)); },
-	HsvToHex = function(hsv) { return RgbToHex(HsvToRgb(hsv)); },
+	HsvToHex = function(hsv) { return _RgbToHex(HsvToRgb(hsv)); },
 
 
 	/**
@@ -162,7 +177,8 @@
 		desaturate: desaturate,
 		changeHue: changeHue,
 		complement: complement,
-		changeColor: changeColor
+		changeColor: changeColor,
+		RgbToHex: RgbToHex
 	};
 
 
@@ -236,16 +252,20 @@
 	 	var self = this;
 	 	this.hooks = {};
 
+		
+		this.hideHash = opts.hideHash;								// Toggle for hash character in input field
 
-		var size = opts.size || fullSize,								// width-height of square saturation-value container
-			ringSize = fullRSize*size/fullSize,							// hue ring is proportional to size input
-			ringRadius = ringSize/2,									// allows for normalizing axis later
-			hypotenuse = ringSize*indicatorPercent,						// hue ring's indicator radius
 
-			activeHSV = [0,1,1],										// current color of picker
-			layout = opts.layout === 'ring' ? 'ring' : 'bar',			// layout is either bar or ring
-			dragInfo = { type: '', tx: 0, ty: 0 };						// indicates either hue or sv dragging
+		var size = opts.size || fullSize,							// width-height of square saturation-value container
+			ringSize = fullRSize*size/fullSize,						// hue ring is proportional to size input
+			ringRadius = ringSize/2,								// allows for normalizing axis later
+			hypotenuse = ringSize*indicatorPercent,					// hue ring's indicator radius
 
+			activeHSV = [0,1,1],									// current color of picker
+			layout = opts.layout === 'ring' ? 'ring' : 'bar',		// layout is either bar or ring
+			dragInfo = { type: '', tx: 0, ty: 0 },					// indicates either hue or sv dragging
+
+			mousedownFlag = false;
 
 
 		/**
@@ -271,9 +291,14 @@
 		 * Functions
 		 */
 		var fn = {
-			isValidHex: function(hex) { return typeof hex === "string" && hex.match(/^#?[0-9a-fA-F]{6}$/i); },
-			setColor: function(hex, disableInputUpdate) {
-				if(fn.isValidHex(hex)) {
+			set: function(hex, disableCallback) {
+				hex = fn.setColor(hex, disableCallback);
+				if(hex) fn.updateInput(hex);
+				return hex;
+			},
+			setColor: function(hex, disableCallback) {
+				hex = RgbToHex(hex);
+				if(isValidHex(hex)) {
 
 					var hsv = HexToHsv(hex);
 					activeHSV = hsv;
@@ -282,7 +307,9 @@
 					else fn.huedrag({y: size - size*hsv[0]/360});
 
 					fn.svdrag({x: size*hsv[1], y: size*(1-hsv[2])});
-					fn.setPreview(hex, disableInputUpdate);
+					
+					hex = fn.setPreview(hex, disableCallback);
+					return hex;
 				}
 			},
 			setFlag: function(e, type) {
@@ -294,6 +321,15 @@
 			},
 			setSVFlag: function(e) { fn.setFlag(e,'sv'); fn.mousedrag(e); },
 			setHueFlag: function(e) { fn.setFlag(e,'hue'); fn.mousedrag(e); },
+
+			mousedown: function(e) {
+				mousedownFlag = true;
+				self.trigger('start', HsvToHex(activeHSV));
+			},
+			mouseup: function(e) {
+				if(mousedownFlag) self.trigger('end', HsvToHex(activeHSV));
+				mousedownFlag = false;
+			},
 
 			/**
 			 * Mouse drag is on the body
@@ -361,22 +397,27 @@
 				if(keysToAccept.indexOf(e.keyCode) === -1) return false;
 			},
 			inputKeyup: function(e) {
-				fn.setColor($input.val(), true);
+				var hex = fn.setColor($input.val());
 				return false;
 			},
 
 			getHex: function(hsv) {
 				if(!hsv) hsv = activeHSV;
-				return RgbToHex(HsvToRgb(hsv));
+				return _RgbToHex(HsvToRgb(hsv));
 			},
-			setPreview: function(hex, setPreview) {
+			setPreview: function(hex, disableCallback) {
 				if(!hex) hex = fn.getHex();
-				if(fn.isValidHex(hex)) {
+				if(isValidHex(hex)) {
 					if(hex[0] !== "#") hex = "#"+hex;
-					$preview.css('background-color', hex)
-					if(!setPreview) $input.val(hex);
-					self.trigger('change', hex, opts.$el);
+					$preview.css('background-color', hex);
+					if(!disableCallback) self.trigger('change', hex, opts.$el);
+
+					return hex;
 				}
+			},
+			updateInput: function(hex) {
+				if(self.hideHash) hex = hex.substr(1);
+				$input.val(hex);
 			}
 		};
 
@@ -384,7 +425,9 @@
 		 * Event binding and delegation
 		 */
 		var events = [
+			['.iD-hue-pick', 'mousedown', 'mousedown'],
 			['.iD-hue-pick', 'mousedown', 'setHueFlag'],
+			['.iD-sv-pick', 'mousedown', 'mousedown'],
 			['.iD-sv-pick', 'mousedown', 'setSVFlag'],
 			['.iD-input-field', 'keyup', 'inputKeyup'],
 			['.iD-input-field', 'keydown', 'inputKeydown']
@@ -393,9 +436,14 @@
 		this.bind('mousedrag', fn['mousedrag']);
 		this.bind('huedrag', fn['huedrag']);
 		this.bind('svdrag', fn['svdrag']);
-		this.bind('change', opts.onChange);
 
-		this.set = fn.setColor;
+		$body.bind('mouseup', fn['mouseup']);
+
+		if(typeof opts.onChange === "function") this.bind('change', opts.onChange);
+		if(typeof opts.onStart === "function") this.bind('start', opts.onStart);
+		if(typeof opts.onEnd === "function") this.bind('end', opts.onEnd);
+
+		this.set = fn.set;
 
 
 		/**
@@ -430,7 +478,7 @@
 		}
 		
 		opts.color = opts.color || '#ff0000';
-		fn.setColor(opts.color);
+		fn.set(opts.color);
 
 	};
 	IDropper.prototype.bind = function(event, fn) {
