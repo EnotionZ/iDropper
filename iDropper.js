@@ -350,11 +350,11 @@
 			},
 			mouseup: function(e) {
 				var hex = HsvToHex(activeHSV);
-				mousedownFlag = false;
 				if(mousedownFlag) {
 					self.trigger('end', hex);
 					self.trigger('change', hex);
 				}
+				mousedownFlag = false;
 			},
 			mousedrag: function(e) {
 				var hex, m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
@@ -507,7 +507,7 @@
 		}
 		
 		opts.color = opts.color || '#ff0000';
-		fn.set(opts.color);
+		fn.set(opts.color, true);
 
 	};
 	IDropper.prototype.bind = function(event, fn) {
