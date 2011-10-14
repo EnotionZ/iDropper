@@ -171,14 +171,14 @@
 	 * Utilities and stuff
 	 */
 	$.iDropper = {
-		lighten: lighten,
-		darken: darken,
-		saturate: saturate,
-		desaturate: desaturate,
-		changeHue: changeHue,
-		complement: complement,
-		changeColor: changeColor,
-		RgbToHex: RgbToHex
+		lighten:          lighten,
+		darken:           darken,
+		saturate:         saturate,
+		desaturate:       desaturate,
+		changeHue:        changeHue,
+		complement:       complement,
+		changeColor:      changeColor,
+		RgbToHex:         RgbToHex
 	};
 
 
@@ -186,19 +186,20 @@
 
 
 	/**
-	 * Mouse up and move events (drag and dragend) are attached only once on the body
+	 * Mouse up and move events (drag and dragend) are attached only once on the body and triggers that event
+	 * on the active iDropper instance. This allows dragging outside of container holding iDropper
 	 */
 	var $body = $('body');
 	var activeDropper = null;
 	var iDfn = {
-		preventGhost: function() { return false; }, // Stops bubbling, prevents dragging image ghost
-		mouseup: function() { activeDropper = null; },
-		mousemove: function(e) {
-			if(activeDropper){
-				activeDropper.trigger('mousedrag', e);
-				return false;
-			}
-		}
+		// Stops bubbling, prevents dragging image ghost
+		preventGhost: function() { return false; },
+
+		// Fires active instance's mouseup and dereference active instance
+		mouseup: function(e) { if(activeDropper) activeDropper.trigger('mouseup', e); activeDropper = null; },
+
+		// Fires active instance's mousedrag
+		mousemove: function(e) { if(activeDropper) activeDropper.trigger('mousedrag', e); }
 	};
 	$body.bind('mousemove.iDfn', iDfn['mousemove']);
 	$body.bind('mouseup.iDfn', iDfn['mouseup']);
@@ -216,9 +217,9 @@
 	 */
 	var $imgPathEl = $('<div/>').appendTo($body),
 		URL = {
-			SATVAL: $imgPathEl.attr('class','iD-img-sv').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
-			HUEBAR: $imgPathEl.attr('class','iD-img-huebar').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
-			HUERING: $imgPathEl.attr('class','iD-img-huering').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
+			SATVAL:   $imgPathEl.attr('class','iD-img-sv').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
+			HUEBAR:   $imgPathEl.attr('class','iD-img-huebar').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
+			HUERING:  $imgPathEl.attr('class','iD-img-huering').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
 		};
 		$imgPathEl.remove();
 
@@ -226,15 +227,19 @@
 	/**
 	 * Global dimension setup
 	 */
-	var fullSize = 256,											// original width of the saturation-value map
-		fullRSize = 482,										// full ring size, original width of hue ring
-		ringHalf = 50/2,										// Hue ring's (outter_radius - inner_radius)/2
+	var fullSize =    256,										// original width of the saturation-value map
+		fullRSize =   482,										// full ring size, original width of hue ring
+		ringHalf =    50/2,										// Hue ring's (outter_radius - inner_radius)/2
+
 		indicatorPercent = (fullRSize/2-ringHalf)/fullRSize,	// percent of hue ring's width from center point where indicator sits
 		radiansToDegrees = 360/(2*Math.PI),
 
 		IE = /MSIE (\d+\.\d+);/.test(navigator.userAgent) ? parseFloat(RegExp.$1) : NaN,
 		IE6 = IE === 6,
-		keysToAccept = [8,9, 37,38,39,40,  48,49,50,51,52,53,54,55,56,57,  65,66,67,68,69,70,  86,  96,97,98,99,100,101,102,103,104,105];
+
+		keysToAccept = // Keys to filter in when user types in input field
+		//BKSPACE SPACE LEFT UP  RIGHT DOWN  0  1  2  3  4  5  6  8  8  9    a  b  c  d  e  f    v    numpad 0-9
+		 [8,      9,    37,  38, 39,   40,   48,49,50,51,52,53,54,55,56,57,  65,66,67,68,69,70,  86,  96,97,98,99,100,101,102,103,104,105];
 
 
 
@@ -249,23 +254,20 @@
 	 var IDropper = function(opts) {
 
 	 	
-	 	var self = this;
-	 	this.hooks = {};
+	 	var self =           this;
+	 	this.hooks =         {};
+		this.hideHash =      opts.hideHash;								// Toggle for hash character in input field
 
-		
-		this.hideHash = opts.hideHash;								// Toggle for hash character in input field
+		var size =           opts.size || fullSize,						// width-height of square saturation-value container
+			ringSize =       fullRSize*size/fullSize,					// hue ring is proportional to size input
+			ringRadius =     ringSize/2,								// allows for normalizing axis later
+			hypotenuse =     ringSize*indicatorPercent,					// hue ring's indicator radius
 
+			activeHSV =      [0,1,1],									// current color of picker
+			layout =         opts.layout === 'ring' ? 'ring' : 'bar',	// layout is either bar or ring
+			dragInfo =       { type: '', tx: 0, ty: 0 },				// indicates either hue or sv dragging
 
-		var size = opts.size || fullSize,							// width-height of square saturation-value container
-			ringSize = fullRSize*size/fullSize,						// hue ring is proportional to size input
-			ringRadius = ringSize/2,								// allows for normalizing axis later
-			hypotenuse = ringSize*indicatorPercent,					// hue ring's indicator radius
-
-			activeHSV = [0,1,1],									// current color of picker
-			layout = opts.layout === 'ring' ? 'ring' : 'bar',		// layout is either bar or ring
-			dragInfo = { type: '', tx: 0, ty: 0 },					// indicates either hue or sv dragging
-
-			mousedownFlag = false;
+			mousedownFlag =  false;
 
 
 		/**
@@ -288,63 +290,90 @@
 
 
 		/**
-		 * Functions
+		 * Private "instance methods"
 		 */
 		var fn = {
+			// Fires setColor with option to disable "change" callback (in case we *only* want to update the color)
 			set: function(hex, disableCallback) {
-				hex = fn.setColor(hex, disableCallback);
-				if(hex) fn.updateInput(hex);
+				hex = fn.setColor(hex);
+				if(hex) {
+					fn.updateInput(hex);
+					if(!disableCallback) self.trigger('change', hex);
+				}
 				return hex;
 			},
-			setColor: function(hex, disableCallback) {
+			setColor: function(hex) {
 				hex = RgbToHex(hex);
 				if(isValidHex(hex)) {
-
 					var hsv = HexToHsv(hex);
 					activeHSV = hsv;
 
+					// Setting hue
 					if(layout === 'ring') fn.huedrag({theta: (270-hsv[0])/radiansToDegrees});
 					else fn.huedrag({y: size - size*hsv[0]/360});
 
+					// Setting saturation/value
 					fn.svdrag({x: size*hsv[1], y: size*(1-hsv[2])});
-					
-					hex = fn.setPreview(hex, disableCallback);
+
+					hex = fn.setPreview(hex);
 					return hex;
 				}
 			},
+
+
+			// Stores information before a drag since mousedown and mouseup/mousemove have different "targets"
 			setFlag: function(e, type) {
 				var tOffset = e.manual ? e : $(e.target).offset();
 				tOffset.left -= $body.scrollLeft();
 				tOffset.top -= $body.scrollTop();
-				activeDropper = self;
 				dragInfo = { type: type, tx: tOffset.left, ty: tOffset.top };
+				activeDropper = self;
 			},
-			setSVFlag: function(e) { fn.setFlag(e,'sv'); fn.mousedrag(e); },
-			setHueFlag: function(e) { fn.setFlag(e,'hue'); fn.mousedrag(e); },
+			setSVFlag: function(e) { fn.setFlag(e,'svdrag'); fn.mousedrag(e); },
+			setHueFlag: function(e) { fn.setFlag(e,'huedrag'); fn.mousedrag(e); },
+
+
+			// Keydown from input field, filters out invalid characters
+			inputKeydown: function(e) { if(keysToAccept.indexOf(e.keyCode) === -1) return false; },
+
+			// Keyup from input field, only trigger "change" event if hex is valid
+			inputKeyup: function(e) {
+				var hex = fn.setColor($input.val());
+				if(hex) self.trigger('change', hex);
+				return false;
+			},
+
 
 			mousedown: function(e) {
 				mousedownFlag = true;
 				self.trigger('start', HsvToHex(activeHSV));
 			},
 			mouseup: function(e) {
-				if(mousedownFlag) self.trigger('end', HsvToHex(activeHSV));
+				var hex = HsvToHex(activeHSV);
 				mousedownFlag = false;
+				if(mousedownFlag) {
+					self.trigger('end', hex);
+					self.trigger('change', hex);
+				}
 			},
-
-			/**
-			 * Mouse drag is on the body
-			 */
 			mousedrag: function(e) {
-				var m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
+				var hex, m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
 
+				// Keep drag within valid boundary
 				if(m.x < 0) m.x = 0;
 				if(m.y < 0) m.y = 0;
 
-				if(dragInfo.type === 'hue') self.trigger('huedrag', m);
-				else if(dragInfo.type === 'sv') self.trigger('svdrag', m);
-				fn.setPreview();
+				fn[dragInfo.type](m); // fires either svdrag or huedrag
+
+				if(hex = fn.setPreview()) {
+					fn.updateInput(hex);
+					self.trigger('drag', hex);
+				}
 			},
+
+
 			huedrag: function(m) {
+				var hex;
 
 				if(layout === 'ring') {
 					var x, y, t, d;
@@ -382,7 +411,7 @@
 					if(activeHSV[0] >= 360) activeHSV[0] = 359;
 					$hueIndicator.css({ top: m.y });
 				}
-				$svContainer.css('background-color', fn.getHex([activeHSV[0], 1, 1]));
+				$svContainer.css('background-color', hex = fn.getHex([activeHSV[0], 1, 1]));
 			},
 			svdrag: function(m) {
 				if(m.x > size) m.x = size;
@@ -393,57 +422,57 @@
 				activeHSV[2] = 1-m.y/size;
 			},
 
-			inputKeydown: function(e) {
-				if(keysToAccept.indexOf(e.keyCode) === -1) return false;
-			},
-			inputKeyup: function(e) {
-				var hex = fn.setColor($input.val());
-				return false;
-			},
 
+			// Convert hsv to hex (or use instance's activeHSV if none is defined)
 			getHex: function(hsv) {
 				if(!hsv) hsv = activeHSV;
 				return _RgbToHex(HsvToRgb(hsv));
 			},
-			setPreview: function(hex, disableCallback) {
+			setPreview: function(hex) {
 				if(!hex) hex = fn.getHex();
 				if(isValidHex(hex)) {
 					if(hex[0] !== "#") hex = "#"+hex;
 					$preview.css('background-color', hex);
-					if(!disableCallback) self.trigger('change', hex, opts.$el);
-
 					return hex;
 				}
 			},
+
+			// Updates text input field
 			updateInput: function(hex) {
 				if(self.hideHash) hex = hex.substr(1);
 				$input.val(hex);
 			}
 		};
 
-		/**
-		 * Event binding and delegation
-		 */
+
+
+		// Event delegations from container holding iDropper DOM nodes
 		var events = [
-			['.iD-hue-pick', 'mousedown', 'mousedown'],
-			['.iD-hue-pick', 'mousedown', 'setHueFlag'],
-			['.iD-sv-pick', 'mousedown', 'mousedown'],
-			['.iD-sv-pick', 'mousedown', 'setSVFlag'],
-			['.iD-input-field', 'keyup', 'inputKeyup'],
-			['.iD-input-field', 'keydown', 'inputKeydown']
+			['.iD-hue-pick',      'mousedown',     'mousedown'],
+			['.iD-hue-pick',      'mousedown',     'setHueFlag'],
+			['.iD-sv-pick',       'mousedown',     'mousedown'],
+			['.iD-sv-pick',       'mousedown',     'setSVFlag'],
+			['.iD-input-field',   'keyup',         'inputKeyup'],
+			['.iD-input-field',   'keydown',       'inputKeydown']
 		];
 		for(var i=0; i<events.length; i++) $el.delegate(events[i][0], events[i][1], fn[events[i][2]]);
+
+
+		// Events triggered from body on active dragger instance (activeDropper)
+		// Instance is set during a setFlag which happens during the iDropper's mousedown event
 		this.bind('mousedrag', fn['mousedrag']);
-		this.bind('huedrag', fn['huedrag']);
-		this.bind('svdrag', fn['svdrag']);
+		this.bind('mouseup', fn['mouseup']);
 
-		$body.bind('mouseup', fn['mouseup']);
 
+		// Bind events from init parameter
 		if(typeof opts.onChange === "function") this.bind('change', opts.onChange);
 		if(typeof opts.onStart === "function") this.bind('start', opts.onStart);
+		if(typeof opts.onDrag === "function") this.bind('drag', opts.onDrag);
 		if(typeof opts.onEnd === "function") this.bind('end', opts.onEnd);
 
+
 		this.set = fn.set;
+		this.utils = $.iDropper;
 
 
 		/**
