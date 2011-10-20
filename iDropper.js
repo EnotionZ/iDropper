@@ -455,7 +455,7 @@
 			['.iD-input-field',   'keyup',         'inputKeyup'],
 			['.iD-input-field',   'keydown',       'inputKeydown']
 		];
-		for(var i=0; i<events.length; i++) $el.delegate(events[i][0], events[i][1], fn[events[i][2]]);
+		for(var i=0; i<events.length; i++) $el.find(events[i][0]).bind(events[i][1], fn[events[i][2]]);
 
 
 		// Events triggered from body on active dragger instance (activeDropper)
