@@ -262,9 +262,19 @@ a:hover {
   height: 100%;
   border: 0;
 }
+#iDx-ex-demobtn-view {
+  float: right;
+  width: 325px;
+  margin-right: 25px;
+  margin-top: 20px;
+}
+#iDx-ex-demobtn-view p {
+  clear: both;
+  padding-top: 20px;
+  padding-right: 30px;
+}
 .demobtn {
   background: #d6d6d6;
-  float: right;
   margin-right: 10px;
   padding: 4px;
   cursor: pointer;

@@ -53,18 +53,21 @@
 			<div class="iDx-content2-block">
 				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information. Code to produce this "Button Editor" is below the demo.
 				</p>
-				<p> Note: this is an implementation of a design from <a href="http://www.premiumpixels.com/freebies/add-to-cart-buttons-psd/" title="Premium Pixels">Premium Pixels</a> which uses quite a bit of CSS magic. It goes without saying that you should try this demo in a modern browser like <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new/" title="Mozilla Firefox">Firefox</a>.
-				</p>
 				<div id="iDx-ex-demobtn">
-					<a class="demobtn clearfix">
-						<span class="demobtn-contain">
-							<span class="demobtn-text">Add To Cart</span>
-							<span class="demobtn-cost">
-								<span class="demobtn-dollar">$</span>
-								<span class="demobtn-price">9.99</span>
+
+					<div id="iDx-ex-demobtn-view">
+						<a class="demobtn clearfix">
+							<span class="demobtn-contain">
+								<span class="demobtn-text">Add To Cart</span>
+								<span class="demobtn-cost">
+									<span class="demobtn-dollar">$</span>
+									<span class="demobtn-price">9.99</span>
+								</span>
 							</span>
-						</span>
-					</a>
+						</a>
+						<p> Note: this is an implementation of a design from <a href="http://www.premiumpixels.com/freebies/add-to-cart-buttons-psd/" title="Premium Pixels">Premium Pixels</a> which uses quite a bit of CSS magic. It goes without saying that you should try this demo in a modern browser like <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new/" title="Mozilla Firefox">Firefox</a>.
+						</p>
+					</div>
 				</div>
 <pre class="prettyprint lang-js">
 var
