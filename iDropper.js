@@ -189,6 +189,7 @@
 	 * Mouse up and move events (drag and dragend) are attached only once on the body and triggers that event
 	 * on the active iDropper instance. This allows dragging outside of container holding iDropper
 	 */
+	var $htmlbody = $('html,body');
 	var $body = $('body');
 	var activeDropper = null;
 	var iDfn = {
@@ -335,9 +336,10 @@
 			 * Stores information before a drag since mousedown and mouseup/mousemove have different "targets"
 			 */
 			setFlag: function(e, type) {
-				var tOffset = e.manual ? e : $(e.target).offset();
-				tOffset.left -= $body.scrollLeft();
-				tOffset.top -= $body.scrollTop();
+				var tOffset = e.manual ? e : $(e.target).offset(),
+					scrollTop = $htmlbody.scrollTop() || $body.scrollTop() || 0;
+				tOffset.left -= $htmlbody.scrollLeft();
+				tOffset.top -= scrollTop;
 				dragInfo = { type: type, tx: tOffset.left, ty: tOffset.top };
 				activeDropper = self;
 			},
@@ -535,9 +537,10 @@
 
 	};
 	IDropper.prototype.bind = function(event, fn) {
-		if(typeof fn !== 'function') return false;
+		if(typeof fn !== 'function') return this;
 		if(!this.hooks[event]) this.hooks[event] = [];
 		this.hooks[event].push(fn);
+		return this;
 	};
 	IDropper.prototype.trigger = function(event, param, context) {
 		var fns = this.hooks[event];
