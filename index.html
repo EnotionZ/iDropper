@@ -1,97 +1,362 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>EyeDropper Example</title>
+	<title>iDropper - jQuery color picker plugin</title>
+	<link href="http://enki.s3-website-us-east-1.amazonaws.com/stylesheets/prettify.css" media="screen" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="iDropper.css">
-	<style>
-		body.iD { padding: 10px; }
-		div { margin: 0; padding: 0; }
-		body { font: normal 12px/16px arial;}
-		.idrop_example { float: left; margin-right: 50px; }
-
-		#idrop1 ul { list-style-type: none; padding: 0 0 0 12px; }
-		*html #idrop1 ul { padding: 0; }
-		#idrop1 ul > li { height: 20px; }
-
-		#idrop2 { padding-bottom: 50px; }
-
-		.labels label { display: block; width: 170px; float: left;}
-		.labels span {
-			display: block; float: left;
-			width: 70px; text-align: center;
-			font-family: courier;
-			font-weight: bold;
-		}
-	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script src="http://enki.s3-website-us-east-1.amazonaws.com/javascripts/google-code-prettify/prettify.js" type="text/javascript"></script>
 </head>
-<body class="iD">
+<body>
 
-<div id="idrop1" class="idrop_example">
-	<p>
-		<h3>Color math</h3>
+<a href="http://github.com/enotionz/idropper"><img style="position: fixed; z-index: 12; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/6429057dfef9e98189338d22e7f6646c6694f032/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
 
-		<ul class="labels">
-			<li>
-				<label>IDropper Callback with color: </label>
-				<span id="id1_change"></span>
-			</li>
-			<li>
-				<label>Hue-shift 180: </label>
-				<span id="id1_hueshift"></span>
-			</li>
-			<li>
-				<label>Lighten by 25%:</label>
-				<span id="id1_lighten"></span>
-			</li>
-			<li>
-				<label>Darken by 25%: </label>
-				<span id="id1_darken"></span>
-			</li>
-			<li>
-				<label>Saturate by 25%: </label>
-				<span id="id1_sat"></span>
-			</li>
-			<li>
-				<label>Desaturate by 25%: </label>
-				<span id="id1_desat"></span>
-			</li>
+
+<div id="iDx-nav-container">
+	<div class="iDx-container">
+		<h1 id="iDx-title"><em>i</em>Dropper</h1>
+		<ul id="iDx-nav">
+			<li class="first-child">&nbsp;</li>
+			<li><a href="#about" title="About">About</a></li>
+			<li><a href="#usage" title="Basic Usage">Basic Usage</a></li>
+			<li><a href="#dimension" title="Dimension Setting">Dimension</a></li>
+			<li><a href="#layout"title="Layout Setting">Layout</a></li>
+			<li><a href="#colormath" title="Color Math">Color Math</a></li>
+			<li class="last-child">&nbsp;</li>
 		</ul>
-	</p>
+	</div>
+</div>
+<div id="iDx-content-container" class="iDx-container">
+	<div class="iDx-content clearfix">
+
+		
+		<h3>About<a class="iDx-anchor" name="about"></a></h3>
+		<div class="iDx-content-block" id="iDx-content-about">
+			<p>
+			iDropper is a color picker plugin for jQuery. It was built out of frustration from the lack of basic features in existing color pickers (mainly dimension setting). iDropper has exposed math functions so you can get creative with your implementation.
+			</p>
+
+			<ul id="iDx-links">
+				<li><a href="https://github.com/enotionz/idropper" title="Fork">Fork on Github</a></li>
+				<li><a href="https://twitter.com/enotionz" title="Fork">Follow me on Twitter</a></li>
+				<li><a href="https://dph.am" title="Fork">Visit my site</a></li>
+			</ul>
+		</div>
+
+		
+		<h3>Basic Usage<a class="iDx-anchor" name="usage"></a></h3>
+		<div class="iDx-content-block" id="iDx-content-usage">
+
+			<h4>Instantiating</h4>
+			<div class="iDx-content2-block">
+				<p>
+					All you need to do to create an instance of iDropper is call jQuery's iDropper() prototype method on the container which you want iDropper to append to. Further, after instantiating iDropper, you can get its instance by grabbing the "iDropper" data attribute from the element you instatiated with.
+<pre class="prettyprint lang-js">
+var
+iDropperContainer = $('#container').iDropper(),
+iDropperInstance = iDropperContainer.data("iDropper");
+</pre>
+
+
+					To set the initial color, instantiate iDropper with an object and set the "color" key to a valid hex color.
+<pre class="prettyprint lang-js">
+var
+iDropperContainer = $('#container').iDropper({
+   color: "#64c7d9"
+});
+</pre>
+
+					iDropper creates a text input field which displays the active color and allows users to also input colors. At default, this input field displays the hash symbol. You can turn this off and have iDropper only display the 6-digit hex by setting hideHash to true.
+<pre class="prettyprint lang-js">
+var
+iDropperContainer = $('#container').iDropper({
+   hideHash: true
+});
+</pre>
+				</p>
+			</div>
+
+
+			<h4>Callbacks/Event Bindings</h4>
+			<div class="iDx-content2-block">
+				<p>
+					There are four iDropper events to bind to (change, start, drag, end) and two ways to bind them; by passing in callbacks during instatiation and by calling the bind method after instatiation. The benefit of binding is that you can attach callbacks after instatiation, in case you don't have that information ahead of time. Also, by using bind, you can attach multiple callbacks to a single event. These callback functions receive the iDropper instance as context, and the jQuery element that iDropper was instatiated on can be referenced through the instance's "el" key.
+<pre class="prettyprint lang-js">
+// Callbacks passed in during instatiation 
+$('#container').iDropper({
+   onChange: function(hex) { console.log(hex); },
+   onStart: function(hex) { console.log(hex); },
+   onDrag: function(hex) { console.log(hex); },
+   onEnd: function(hex) { console.log(hex); }
+});
+
+
+// Binding callbacks after instatiation
+var iDropperInstance = $('#container').iDropper().data("iDropper");
+iDropperInstance.bind("change", function(hex) { console.log(hex); });
+iDropperInstance.bind("start", function(hex) { console.log(hex); });
+iDropperInstance.bind("drag", function(hex) { console.log(hex); });
+iDropperInstance.bind("end", function(hex) { console.log(hex); });
+
+
+// Bind method returns instance, so you can chain like so
+$('#container').iDropper().data("iDropper")
+   .bind("change", function(hex) { console.log(hex); })
+   .bind("start", function(hex) { console.log(hex); })
+   .bind("drag", function(hex) { console.log(hex); })
+   .bind("end", function(hex) { console.log(hex); });
+</pre>
+				</p>
+			</div>
+
+			<h4>Basic Usage Demo</h4>
+			<div class="iDx-content2-block">
+<pre class="prettyprint lang-js">
+// This is the instatiation call that produced the demo below
+var
+exChange = $("#iDx-ex-usage-change"),
+exStart = $("#iDx-ex-usage-start"),
+exDrag = $("#iDx-ex-usage-drag"),
+exEnd = $("#iDx-ex-usage-end");
+
+$('#iDx-ex-usage').iDropper({
+   color: "#64c7d9",
+   onChange: function(hex) { exChange.html(hex).css("border-color", hex); },
+   onStart: function(hex) { exStart.html(hex).css("border-color", hex); },
+   onDrag: function(hex) { exDrag.html(hex).css("border-color", hex); },
+   onEnd: function(hex) { exEnd.html(hex).css("border-color", hex); }
+});
+</pre>
+				<ul class="iDx-listing">
+					<li>
+						<label>Update from "start" event</label>
+						<span id="iDx-ex-usage-start"></span>
+					</li>
+					<li>
+						<label>Update from "drag" event</label>
+						<span id="iDx-ex-usage-drag"></span>
+					</li>
+					<li>
+						<label>Update from "end" event</label>
+						<span id="iDx-ex-usage-end"></span>
+					</li>
+					<li>
+						<label>Update from "change" event</label>
+						<span id="iDx-ex-usage-change"></span>
+					</li>
+				</ul>
+				<div id="iDx-ex-usage"></div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<h3>Dimension<a class="iDx-anchor" name="dimension"></a></h3>
+		<div class="iDx-content-block" id="iDx-content-dimension">
+			<div class="iDx-content2-block">
+				<p>
+				One of the cool unique features in iDropper is that it supports setting dimension. To set the dimension of iDropper, set the "size" key when initializing with an integer. The width and height of the hue-saturation scale will be set to this value. Now, iDropper can be tailored to fit into any design you're trying to build out!
+				</p>
+<pre class="prettyprint lang-js">
+$("#iDx-ex-dim80").iDropper({
+	size: 80,
+	color: "#ff0000"
+});
+$("#iDx-ex-dim120").iDropper({
+	size: 120,
+	color: "#00ff00"
+});
+$("#iDx-ex-dim160").iDropper({
+	size: 160,
+	color: "#0000ff"
+});
+</pre>
+				<div id="iDx-ex-dim80"></div>
+				<div id="iDx-ex-dim120"></div>
+				<div id="iDx-ex-dim160"></div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+		
+		<h3>Layout<a class="iDx-anchor" name="layout"></a></h3>
+
+		<div class="iDx-content-block" id="iDx-content-layout">
+			<div class="iDx-content2-block">
+				<p>
+				iDropper supports two layouts; <em>bar</em> and <em>ring</em>. The default is <em>bar</em> (shown above). <br/>To use the <em>ring</em> layout, simply set "ring" on the object parameter's "layout" key. The ring layout uses the same saturation-value image as the bar layout. In order to wrap the hue ring around it, the default dimension of this layout is actually quite big; you probably want to set the dimension to be something smaller.
+				</p>
+<pre class="prettyprint lang-js">
+// This is the instatiation call that produced the demo below
+var exLayout = $("#iDx-ex-layout-change");
+$('#iDx-ex-usage').iDropper({
+   color: "#7dd1c3",
+   layout: "ring",
+   size: 125,
+   onDrag: function(hex) { exLayout.html(hex); }
+});
+</pre>
+				<div id="iDx-ex-layout">
+					"Change" callback was fired with the color:
+					<span id="iDx-ex-layout-change"></span>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+
+
+		
+		<h3>Color math<a class="iDx-anchor" name="colormath"></a></h3>
+		<div class="iDx-content-block" id="iDx-content-colormath">
+			<div class="iDx-content2-block">
+				<p>
+				iDropper ships with color math functions. You can get access to these utility functions by referencing $.iDropper, or if you're in the scope of your callback function, this.utility.
+				</p>
+
+				<ul class="labels iDx-listing">
+					<li>
+						<label>"drag" color: </label>
+						<span id="id1_change"></span>
+					</li>
+					<li>
+						<label>Hue-shift 180: </label>
+						<span id="id1_hueshift"></span>
+					</li>
+					<li>
+						<label>Lighten by 25%:</label>
+						<span id="id1_lighten"></span>
+					</li>
+					<li>
+						<label>Darken by 25%: </label>
+						<span id="id1_darken"></span>
+					</li>
+					<li>
+						<label>Saturate by 25%: </label>
+						<span id="id1_sat"></span>
+					</li>
+					<li>
+						<label>Desaturate by 25%: </label>
+						<span id="id1_desat"></span>
+					</li>
+				</ul>
+				<div id="iDx-ex-colormath" class="clearfix"></div>
+
+<pre class="prettyprint lang-js">
+// Code for the above example
+var $id1 = $('#iDx-ex-colormath'),
+   id1Change = $('#id1_change'),
+   id1Hueshift = $('#id1_hueshift'),
+   id1Darken = $('#id1_darken'),
+   id1Lighten = $('#id1_lighten'),
+   id1Saturate = $('#id1_sat'),
+   id1Desaturate = $('#id1_desat');
+
+$id1.iDropper({
+   color: '#b4bb83',
+   onDrag: function(hex) {
+      var
+      hue = $.iDropper.changeHue(hex, 180),
+      dar = $.iDropper.darken(hex, .25),
+      lig = $.iDropper.lighten(hex, .25),
+      sat = $.iDropper.saturate(hex, .25),
+      des = $.iDropper.desaturate(hex, .25),
+
+      hexText = $.iDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+      hueText = $.iDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+      darText = $.iDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+      ligText = $.iDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+      satText = $.iDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
+      desText = $.iDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true});
+
+      $id1Change.html(hex).css({'background-color': hex, 'color': hexText});
+      $id1Hueshift.html(hue).css({'background-color': hue, 'color': hueText});
+      $id1Lighten.html(lig).css({'background-color': lig, 'color': ligText});
+      $id1Darken.html(dar).css({'background-color': dar, 'color': darText});
+      $id1Saturate.html(sat).css({'background-color': sat, 'color': satText});
+      $id1Desaturate.html(des).css({'background-color': des, 'color': desText});
+   }
+});
+</pre>
+			</div>
+		</div>
+
+		
+
+		<div class="iDx-content-shadow"></div>
+	</div>
+
 </div>
 
-<div id="idrop2" class="idrop_example">
-	<p class="labels">
-		<h3>Different layout options</h3>
-
-		Supports two layouts: 'bar' and 'ring'
-	</p>
-</div>
-
-<div id="idrop3" class="idrop_example">
-	<p>
-		<h3>Dimension setting</h3>
-		Supports 'size' parameter
-	</p>
-</div>
 
 
 <script src="iDropper.js"></script>
 <script>
-var $id1 = $('#idrop1'),
+
+if(typeof prettyPrint === "function") prettyPrint();
+
+
+var
+exChange = $("#iDx-ex-usage-change"),
+exStart = $("#iDx-ex-usage-start"),
+exDrag = $("#iDx-ex-usage-drag"),
+exEnd = $("#iDx-ex-usage-end");
+$('#iDx-ex-usage').iDropper({
+	color: "#64c7d9",
+	onChange: function(hex) { exChange.html(hex).css("border-color", hex); },
+	onStart: function(hex) { exStart.html(hex).css("border-color", hex); },
+	onDrag: function(hex) { exDrag.html(hex).css("border-color", hex); },
+	onEnd: function(hex) { exEnd.html(hex).css("border-color", hex); }
+});
+
+
+
+var exLayout = $("#iDx-ex-layout-change");
+$('#iDx-ex-layout').iDropper({
+   color: "#7dd1c3",
+   layout: "ring",
+   size: 125,
+   onDrag: function(hex) { exLayout.html(hex); }
+});
+
+
+
+$("#iDx-ex-dim80").iDropper({ size: 80, color: "#ff0000" });
+$("#iDx-ex-dim120").iDropper({ size: 120, color: "#00ff00" });
+$("#iDx-ex-dim160").iDropper({ size: 160, color: "#0000ff" });
+
+
+
+
+
+var $id1 = $('#iDx-ex-colormath'),
 	$id1Change = $('#id1_change'),
 	$id1Hueshift = $('#id1_hueshift'),
 	$id1Darken = $('#id1_darken'),
 	$id1Lighten = $('#id1_lighten'),
 	$id1Saturate = $('#id1_sat'),
-	$id1Desaturate = $('#id1_desat'),
-
-	$id2 = $('#idrop2'),
-	$id3 = $('#idrop3');
+	$id1Desaturate = $('#id1_desat');
 
 $id1.iDropper({
 	color: '#b4bb83',
-	onChange: function(hex) {
+	onDrag: function(hex) {
 		var
 		hue = $.iDropper.changeHue(hex, 180),
 		dar = $.iDropper.darken(hex, .25),
@@ -115,9 +380,6 @@ $id1.iDropper({
 	}
 });
 
-
-$id2.iDropper({ layout: 'ring', color: '#7dd1c3', size: 128});
-$id3.iDropper({ size: 128 });
 </script>
 </body>
 </html>
