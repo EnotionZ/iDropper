@@ -241,6 +241,91 @@ a:hover {
 #iDx-content-container {
   margin-top: 80px;
 }
+#iDx-content-about p {
+  margin-bottom: 10px;
+}
+#iDx-ex-demobtn {
+  margin-bottom: 50px;
+}
+#iDx-ex-demobtn .iD-preview-input {
+  bottom: auto;
+  padding: 0;
+}
+#iDx-ex-demobtn .iD-input-container {
+  display: none;
+}
+#iDx-ex-demobtn .iD-sv-container {
+  visibility: hidden;
+}
+#iDx-ex-demobtn .iD-preview {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.demobtn {
+  background: #d6d6d6;
+  float: right;
+  margin-right: 10px;
+  padding: 4px;
+  cursor: pointer;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px;
+}
+.demobtn .demobtn-contain {
+  float: left;
+  text-decoration: none;
+  height: 35px;
+  line-height: 34px;
+  font-size: 22px;
+  font-family: "Helvetica Neue";
+  padding: 0 10px;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px;
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  background-color: #c9e3a3;
+  background-image: -moz-linear-gradient(top, #c9e3a3, #9ccc54);
+  background-image: -o-linear-gradient(top, #c9e3a3, #9ccc54);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c9e3a3), color-stop(1, #9ccc54));
+  background-image: -webkit-linear-gradient(#c9e3a3, #9ccc54);
+  background-image: linear-gradient(top, #c9e3a3, #9ccc54);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#c9e3a3', EndColorStr='#9ccc54');
+  border: 1px solid #678f2b;
+}
+.demobtn .demobtn-contain .demobtn-text {
+  float: left;
+  margin-left: 5px;
+  padding-right: 7px;
+  height: 100%;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  border-right: 1px solid #678f2b;
+}
+.demobtn .demobtn-contain .demobtn-cost {
+  float: left;
+  height: 100%;
+  padding: 0 0 0 8px;
+  font-family: arial;
+  font-weight: 900;
+  text-shadow: 0 1px 0 rgba(255,255,255,.7);
+  color: #4b681f;
+  border-left: 1px solid #c9e3a3;
+}
+.demobtn .demobtn-contain .demobtn-cost .demobtn-dollar {
+  float: left;
+  margin-top: -4px;
+  font-size: 14px;
+}
+.demobtn .demobtn-contain .demobtn-cost .demobtn-price {
+  float: left;
+  font-size: 18px;
+  line-height: 36px;
+  margin-right: 3px;
+}
 #iDx-links {
   list-style-type: disc;
   list-style-position: inside;
