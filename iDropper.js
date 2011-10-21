@@ -535,9 +535,10 @@
 
 	};
 	IDropper.prototype.bind = function(event, fn) {
-		if(typeof fn !== 'function') return false;
+		if(typeof fn !== 'function') return this;
 		if(!this.hooks[event]) this.hooks[event] = [];
 		this.hooks[event].push(fn);
+		return this;
 	};
 	IDropper.prototype.trigger = function(event, param, context) {
 		var fns = this.hooks[event];
