@@ -276,6 +276,7 @@ a:hover {
 .demobtn {
   background: #d6d6d6;
   margin-right: 10px;
+  float: left;
   padding: 4px;
   cursor: pointer;
   -moz-border-radius: 30px;
