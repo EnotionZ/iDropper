@@ -92,6 +92,8 @@ table { border-collapse: collapse; border-spacing: 0; }
 @lighten20: lighten(@color, 25);
 @lighten25: lighten(@color, 25);
 @lighten35: lighten(@color, 35);
+@h3bg: desaturate(@lighten35, 40);
+@h3border: desaturate(@lighten25, 30);
 
 
 
@@ -116,9 +118,9 @@ h3 {
 	line-height: 34px;
 	color: @darken30;
 	text-shadow: 0 1px 1px rgba(0,0,0,.1);
-	background: desaturate(@lighten35, 40);
-	border-top: 1px solid desaturate(@lighten25, 30);
-	border-bottom: 1px solid desaturate(@lighten25, 30);
+	background: @h3bg;
+	border-top: 1px solid @h3border;
+	border-bottom: 1px solid @h3border;
 	margin: 0 -20px 7px;
 	padding: 0 20px;
 }
@@ -214,7 +216,7 @@ h4 {
 	p { clear: both; padding-top: 20px; padding-right: 30px; }
 }
 .demobtn {
-	background: #d6d6d6;
+	background: @h3border;
 	margin-right: 10px;
 	float: left;
 	padding: 4px;
@@ -222,7 +224,7 @@ h4 {
 	.border-radius(30px);
 
 	.demobtn-contain {
-		float: left; text-decoration: none; height: 35px; line-height: 34px; font-size: 22px; font-family: "Helvetica Neue"; padding: 0 10px;
+		float: left; text-decoration: none; height: 35px; line-height: 34px; font-size: 22px; font-family: "Helvetica Neue", "Arial"; padding: 0 10px;
 		.border-radius(30px);
 		.box-shadow(0 1px 1px rgba(0,0,0,.3));
 

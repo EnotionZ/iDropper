@@ -309,7 +309,7 @@ h4 {
   padding-right: 30px;
 }
 .demobtn {
-  background: #d6d6d6;
+  background: #d2dbc4;
   margin-right: 10px;
   float: left;
   padding: 4px;
@@ -324,7 +324,7 @@ h4 {
   height: 35px;
   line-height: 34px;
   font-size: 22px;
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue", "Arial";
   padding: 0 10px;
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;
