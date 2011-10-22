@@ -118,27 +118,27 @@ a {
 		text-shadow: 0 1px 1px #000;
 		em { letter-spacing: 2px; }
 	}
+}
 
-	#iDx-nav {
-		float: right;
+#iDx-nav {
+	float: right;
 
-		> li {
-			&.first-child { border-left: 0; padding: 0; }
-			&.last-child { border-right: 0; padding: 0; }
-			
-			float: left; padding: 0 10px;
-			border-left: 1px solid desaturate(darken(@color,25), 45);
-			border-right: 1px solid desaturate(darken(@color,43), 45);
-			height: 44px;
-			> a {
-				display: block; cursor: pointer;
-				color: @color; height: 44px;
-				text-decoration: none;
-				font: 700 12px/38px "Helvetica Neue", "Arial";
-				text-shadow: 0 1px 1px #000;
-				&:hover { color: #ddd; }
-			}
-		}
+	li {
+		&.first-child { border-left: 0; padding: 0; }
+		&.last-child { border-right: 0; padding: 0; }
+		
+		float: left; padding: 0 10px;
+		border-left: 1px solid desaturate(darken(@color,25), 45);
+		border-right: 1px solid desaturate(darken(@color,43), 45);
+		height: 44px;
+	}
+	a {
+		display: block; cursor: pointer;
+		color: @color; height: 44px;
+		text-decoration: none;
+		font: 700 12px/38px "Helvetica Neue", "Arial";
+		text-shadow: 0 1px 1px #000;
+		&:hover { color: #ddd; }
 	}
 }
 
@@ -192,25 +192,26 @@ a {
 
 		.gradient-background(@lighten20, @color);
 		border: 1px solid @darken20;
-
-		.demobtn-text {
-			float: left; margin-left: 5px; padding-right: 7px; height: 100%; font-weight: 900; color: #fff;
-			text-shadow: 0 1px 1px rgba(0,0,0,.5);
-
-			border-right: 1px solid @darken20;
-		}
-		.demobtn-cost {
-			float: left; height: 100%; padding: 0 0 0 8px; font-family: arial; font-weight: 900;
-			text-shadow: ~"0 1px 0 rgba(255,255,255,.7)";
-
-			color: @darken30;
-			border-left: 1px solid @lighten20;
-
-			.demobtn-dollar { float: left; margin-top: -4px; font-size: 14px; }
-			.demobtn-price { float: left; font-size: 18px; line-height: 36px; margin-right: 3px; }
-		}
 	}
 }
+.demobtn-text {
+	float: left; margin-left: 5px; padding-right: 7px; height: 100%; font-weight: 900; color: #fff;
+	text-shadow: 0 1px 1px rgba(0,0,0,.5);
+
+	border-right: 1px solid @darken20;
+}
+.demobtn-cost {
+	float: left; height: 100%; padding: 0 0 0 8px; font-family: arial; font-weight: 900;
+	text-shadow: ~"0 1px 0 rgba(255,255,255,.7)";
+
+	color: @darken30;
+	border-left: 1px solid @lighten20;
+
+	.demobtn-dollar { float: left; margin-top: -4px; font-size: 14px; }
+	.demobtn-price { float: left; font-size: 18px; line-height: 36px; margin-right: 3px; }
+}
+
+
 
 
 #iDx-links {

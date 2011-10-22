@@ -53,7 +53,7 @@
 
 			<h4>Quick Demo</h4>
 			<div class="iDx-content2-block">
-				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information. Code to produce this "Button Editor" is below the demo.
+				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information. Code to produce this page's style changer and button dditor is below the demo.
 				</p>
 				<div id="iDx-ex-demobtn">
 
@@ -74,39 +74,49 @@
 <pre class="prettyprint lang-js">
 var
 
-$demobtnContain = $(".demobtn-contain"),
-$demobtnText = $(".demobtn-text"),
-$demobtnCost = $(".demobtn-cost"),
+// grab style element
+$styleBlock = $("#style_block"),
 
+// Call iDropper and write style rules into the style block's innerHTML
 demobtnContainer = $("#iDx-ex-demobtn").iDropper({
    color: "#9ccc54",
    layout: "ring",
    size: 140,
-   onDrag: function(hex) {
+   onDrag: function(hex, hsl) {
       var
-      darken20 = $.iDropper.darken(hex, .2),
-      darken30 = $.iDropper.darken(hex, .3),
-      lighten20 = $.iDropper.lighten(hex, .2);
+      util = $.iDropper,
+      darken20 = this.darken(.2),
+      darken30 = this.darken(.3),
+      lighten20 = this.lighten(.2);
 
-      $demobtnContain.css({
-         "border": "1px solid " + darken20,
-         "background-color": hex,
-         "background-image": "-moz-linear-gradient(top, "+lighten20+", "+hex+")",
-         "background-image": "-o-linear-gradient(top, " +lighten20+", "+hex+")",
-         "background-image": "-webkit-gradient(linear,left top,left bottom,color-stop(0,"
-               + lighten20+"),color-stop(1, " + hex + "))",
-         "background-image": "linear-gradient(top, "+lighten20+", "+hex+")",
-         "background-image": "-webkit-linear-gradient("+lighten20+", "+hex+")",
-         "filter": "progid:DXImageTransform.Microsoft.gradient(startColorStr='" 
-               + lighten20 + "', EndColorStr='" + hex + "')"
-      });
-      $demobtnText.css("border-right","1px solid "+darken20);
-      $demobtnCost.css({
-         "color": darken30,
-         "border-left": "1px solid "+lighten20
-      });
+      $styleBlock.html(
+         "a {color: " + this.darken(.1) + ";}\n" +
+         "#iDx-nav-container {\
+            background:" + this.changeColor({l: -0.36, s: -0.42}) + ";\n\
+            border-color:" + this.changeColor({l: -0.3, s: -0.45}) + ";}\n" +
+         "#iDx-nav li {\
+            border-left-color:" + this.changeColor({l: -0.25, s: -0.45}) + ";\n\
+            border-right-color:" + this.changeColor({l: -0.43, s: -0.45}) + ";}\n" +
+         "#iDx-nav a { color:" + hex + ";}\n" +
+
+         ".demobtn .demobtn-contain {\
+            border: 1px solid " + darken20 + ";\n\
+            background-color: " + hex + ";\n\
+            background-image: -moz-linear-gradient(top, "+lighten20+", "+hex+");\n\
+            background-image: -o-linear-gradient(top, " +lighten20+", "+hex+");\n\
+            background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, 
+                  " + lighten20+"),color-stop(1, " + hex + "));\n\
+            background-image: linear-gradient(top, "+lighten20+", "+hex+");\n\
+            background-image: -webkit-linear-gradient("+lighten20+", "+hex+")\n\
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='" + 
+                  lighten20 + "', EndColorStr='" + hex + "');}\n" +
+         ".demobtn-text { border-right: 1px solid "+darken20+";}\n" +
+         ".demobtn-cost { border-left: 1px solid "+lighten20+"; color:"+darken30+";}\n"
+      );
    }
 }),
+
+// Hides saturation-value picker and place the preview at its location
 demobtnSatVal = demobtnContainer.find(".iD-sv-container");
 demobtnContainer.find(".iD-preview-input")
 	.css( demobtnSatVal.position() )
@@ -387,15 +397,10 @@ if(typeof prettyPrint === "function") prettyPrint();
 
 var
 
+// grab style element
 $styleBlock = $("#style_block"),
-$demobtnContain = $(".demobtn-contain"),
-$demobtnText = $(".demobtn-text"),
-$demobtnCost = $(".demobtn-cost"),
 
-$navContainer = $("#iDx-nav-container"),
-$navLi = $("#iDx-nav > li"),
-$navAnchor = $navLi.find("a"),
-
+// Call iDropper and write style rules into the style block's innerHTML
 demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 	color: "#9ccc54",
 	layout: "ring",
@@ -407,35 +412,32 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 		darken30 = this.darken(.3),
 		lighten20 = this.lighten(.2);
 
-		$styleBlock.html("a {color: " + this.darken(.1) + ";}");
-		$navContainer.css({
-			"background": this.changeColor({l: -0.36, s: -0.42}),
-			"border-color": this.changeColor({l: -0.3, s: -0.45}),
-		});
-		$navLi.css({
-			"border-left-color": this.changeColor({l: -0.25, s: -0.45}),
-			"border-right-color": this.changeColor({l: -0.43, s: -0.45})
-		});
-		$navAnchor.css("color", hex);
+		$styleBlock.html(
+			"a {color: " + this.darken(.1) + ";}\n" +
+			"#iDx-nav-container {\
+				background:" + this.changeColor({l: -0.36, s: -0.42}) + ";\n\
+				border-color:" + this.changeColor({l: -0.3, s: -0.45}) + ";}\n" +
+			"#iDx-nav li {\
+				border-left-color:" + this.changeColor({l: -0.25, s: -0.45}) + ";\n\
+				border-right-color:" + this.changeColor({l: -0.43, s: -0.45}) + ";}\n" +
+			"#iDx-nav a { color:" + hex + ";}\n" +
 
-		$demobtnContain.css({
-			"border": "1px solid " + darken20,
-			"background-color": hex,
-			"background-image": "-moz-linear-gradient(top, "+lighten20+", "+hex+")",
-			"background-image": "-o-linear-gradient(top, " +lighten20+", "+hex+")",
-			"background-image": "-webkit-gradient(linear,left top,left bottom,color-stop(0, " + lighten20+"),color-stop(1, " + hex + "))",
-			"background-image": "linear-gradient(top, "+lighten20+", "+hex+")",
-			"background-image": "-webkit-linear-gradient("+lighten20+", "+hex+")",
-  			"filter": "progid:DXImageTransform.Microsoft.gradient(startColorStr='" + lighten20 + "', EndColorStr='" + hex + "')"
-		});
-		$demobtnText.css("border-right","1px solid "+darken20);
-		$demobtnCost.css({
-			"color": darken30,
-			"border-left": "1px solid "+lighten20
-		});
-
+			".demobtn .demobtn-contain {\
+				border: 1px solid " + darken20 + ";\n\
+				background-color: " + hex + ";\n\
+				background-image: -moz-linear-gradient(top, "+lighten20+", "+hex+");\n\
+				background-image: -o-linear-gradient(top, " +lighten20+", "+hex+");\n\
+				background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, " + lighten20+"),color-stop(1, " + hex + "));\n\
+				background-image: linear-gradient(top, "+lighten20+", "+hex+");\n\
+				background-image: -webkit-linear-gradient("+lighten20+", "+hex+")\n\
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='" + lighten20 + "', EndColorStr='" + hex + "');}\n" +
+			".demobtn .demobtn-contain .demobtn-text { border-right: 1px solid "+darken20+";}\n" +
+			".demobtn .demobtn-contain .demobtn-cost { border-left: 1px solid "+lighten20+"; color: "+ darken30 + "; }\n"
+		);
 	}
 }),
+
+// Hides saturation-value picker and place the preview at its location
 demobtnSatVal = demobtnContainer.find(".iD-sv-container");
 demobtnContainer.find(".iD-preview-input")
 	.css( demobtnSatVal.position() )

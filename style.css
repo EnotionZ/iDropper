@@ -176,25 +176,25 @@ a:hover {
 #iDx-nav-container #iDx-title em {
   letter-spacing: 2px;
 }
-#iDx-nav-container #iDx-nav {
+#iDx-nav {
   float: right;
 }
-#iDx-nav-container #iDx-nav > li {
+#iDx-nav li {
   float: left;
   padding: 0 10px;
   border-left: 1px solid #525849;
   border-right: 1px solid #23251f;
   height: 44px;
 }
-#iDx-nav-container #iDx-nav > li.first-child {
+#iDx-nav li.first-child {
   border-left: 0;
   padding: 0;
 }
-#iDx-nav-container #iDx-nav > li.last-child {
+#iDx-nav li.last-child {
   border-right: 0;
   padding: 0;
 }
-#iDx-nav-container #iDx-nav > li > a {
+#iDx-nav a {
   display: block;
   cursor: pointer;
   color: #9ccc54;
@@ -203,7 +203,7 @@ a:hover {
   font: 700 12px/38px "Helvetica Neue", "Arial";
   text-shadow: 0 1px 1px #000;
 }
-#iDx-nav-container #iDx-nav > li > a:hover {
+#iDx-nav a:hover {
   color: #ddd;
 }
 .iDx-content {
