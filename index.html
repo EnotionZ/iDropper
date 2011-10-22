@@ -21,6 +21,7 @@
 		<ul id="iDx-nav">
 			<li class="first-child">&nbsp;</li>
 			<li><a href="#about" title="About">About</a></li>
+			<li><a href="#demo" title="Demo">Demo</a></li>
 			<li><a href="#usage" title="Basic Usage">Basic Usage</a></li>
 			<li><a href="#dimension" title="Dimension Setting">Dimension</a></li>
 			<li><a href="#layout"title="Layout Setting">Layout</a></li>
@@ -52,10 +53,12 @@
 					<li><a href="http://dph.am" title="Visit my site">Visit my site</a></li>
 				</ul>
 			</div>
+		</div>
 
-			<h4>Quick Demo</h4>
+		<h3>Quick Demo<a class="iDx-anchor" name="demo"></a></h3>
+		<div class="iDx-content-block" id="iDx-content-demo">
 			<div class="iDx-content2-block">
-				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information. Notice the navigation at the top of the page, link colors around the page, and the gradient on the "add to cart" button changing along with little shadow and text color details on it. Code to produce this page's style changer and button editor is below the demo.
+				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information to give this page a completely new theme.
 				</p>
 				<div id="iDx-ex-demobtn">
 					<div id="iDx-ex-demobtn-view">
@@ -68,64 +71,10 @@
 								</span>
 							</span>
 						</a>
-						<p> Note: this is an implementation of a design from <a href="http://www.premiumpixels.com/freebies/add-to-cart-buttons-psd/" title="Premium Pixels">Premium Pixels</a> which uses quite a bit of CSS magic. It goes without saying that you should try this demo in a modern browser like <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new/" title="Mozilla Firefox">Firefox</a>.
+						<p> Note: This is an implementation of a design from <a href="http://www.premiumpixels.com/freebies/add-to-cart-buttons-psd/" title="Premium Pixels">Premium Pixels</a> which uses quite a bit of CSS magic. A bunch of color math functions are performed on-the-fly during each mousemove event which could be a huge hit on the browser. It goes without saying that you should try this demo in a modern browser like <a href="http://www.google.com/chrome" title="Google Chrome">Chrome</a> or <a href="http://www.mozilla.org/en-US/firefox/new/" title="Mozilla Firefox">Firefox</a>.
 						</p>
 					</div>
 				</div>
-<pre class="prettyprint lang-js">
-var
-
-// grab style element
-$styleBlock = $("#style_block"),
-
-// Call iDropper and write style rules into the style block's innerHTML
-demobtnContainer = $("#iDx-ex-demobtn").iDropper({
-   color: "#9ccc54",
-   layout: "ring",
-   size: 140,
-   onDrag: function(hex, hsl) {
-      var
-      util = $.iDropper,
-      darken20 = this.darken(.2),
-      darken30 = this.darken(.3),
-      lighten20 = this.lighten(.2),
-      lightBorder = this.changeColor({l: -0.28, s: -0.45});
-
-      $styleBlock.html(
-         "a {color: " + this.darken(.1) + ";}\n" +
-         "body {background-color: " + this.saturate(.1) + ";}\n" +
-         "#iDx-nav-container {\
-            background:" + this.changeColor({l: -0.36, s: -0.42}) + ";\n\
-            border-color:" + lightBorder + ";}\n" +
-         "#iDx-nav li {\
-            border-left-color:" + lightBorder + ";\n\
-            border-right-color:" + this.changeColor({l: -0.43, s: -0.45}) + ";}\n" +
-         "#iDx-nav a { color:" + hex + ";}\n" +
-
-         ".demobtn .demobtn-contain {\
-            border: 1px solid " + darken20 + ";\n\
-            background-color: " + hex + ";\n\
-            background-image: -moz-linear-gradient(top, "+lighten20+", "+hex+");\n\
-            background-image: -o-linear-gradient(top, " +lighten20+", "+hex+");\n\
-            background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, 
-                  " + lighten20+"),color-stop(1, " + hex + "));\n\
-            background-image: linear-gradient(top, "+lighten20+", "+hex+");\n\
-            background-image: -webkit-linear-gradient("+lighten20+", "+hex+")\n\
-            filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='" + 
-                  lighten20 + "', EndColorStr='" + hex + "');}\n" +
-         ".demobtn-text { border-right: 1px solid "+darken20+";}\n" +
-         ".demobtn-cost { border-left: 1px solid "+lighten20+"; color:"+darken30+";}\n"
-      );
-   }
-}),
-
-// Hides saturation-value picker and place the preview at its location
-demobtnSatVal = demobtnContainer.find(".iD-sv-container");
-demobtnContainer.find(".iD-preview-input")
-	.css( demobtnSatVal.position() )
-	.width( demobtnSatVal.width() )
-	.height( demobtnSatVal.height() );
-</pre>
 			</div>
 
 		</div>
@@ -460,10 +409,13 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 		darken20 = this.darken(.2),
 		darken30 = this.darken(.3),
 		lighten20 = this.lighten(.2),
-		lightBorder = this.changeColor({l: -0.28, s: -0.45});
+		lightBorder = this.changeColor({l: -0.28, s: -0.45}),
+		h3bg = this.changeColor({l: 0.35, s: -0.4}),
+		h3border = this.changeColor({l: 0.25, s: -0.30});
 
 		$styleBlock.html(
 			"a {color: " + this.darken(.1) + ";}\n" +
+			"h3 {color: " + darken30 + "; background: " + h3bg + "; border-color: " + h3border + ";}\n" +
 			"body {background-color: " + this.saturate(.1) + ";}\n" +
 			"#iDx-nav-container {\
 				background:" + this.changeColor({l: -0.36, s: -0.42}) + ";\n\
