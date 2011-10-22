@@ -535,7 +535,7 @@
 		this.desaturate =  fn.desaturate;
 		this.changeHue =   fn.changeHue;
 		this.complement =  fn.complement;
-		this.changeColor = fn.changeColorb;
+		this.changeColor = fn.changeColor;
 		this.utils =       $.iDropper;    // Expose color math and utility functions
 
 
