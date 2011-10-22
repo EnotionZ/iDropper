@@ -1,12 +1,14 @@
-.iD {
-  margin: 0;
-  padding: 0;
-  position: relative;
+.iD-dragging, .iD {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+.iD {
+  margin: 0;
+  padding: 0;
+  position: relative;
 }
 .iD-sv-container {
   float: left;

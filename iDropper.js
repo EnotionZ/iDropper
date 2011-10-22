@@ -387,6 +387,7 @@
 			mousedown: function(e) {
 				mousedownFlag = true;
 				self.trigger('start', self.hex, self.hsl);
+				$body.addClass('iD-dragging');
 			},
 			mouseup: function(e) {
 				if(mousedownFlag) {
@@ -394,6 +395,7 @@
 					self.trigger('change', self.hex, self.hsl);
 				}
 				mousedownFlag = false;
+				$body.removeClass('iD-dragging');
 			},
 			mousedrag: function(e) {
 				var hex, m = { x : e.clientX - dragInfo.tx, y : e.clientY - dragInfo.ty };
