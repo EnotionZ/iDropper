@@ -103,8 +103,19 @@ a {
 	color: @darken10; font-weight: bold; text-decoration: none;
 	&:hover { color: #666; }
 }
+p {
+	margin: 0 0 10px;	
+}
 
 .iDx-container { width: 700px; margin: 0 auto; }
+.labels-list {
+	padding-left: 20px; margin: 0 0 10px;
+	> li {
+		clear: both;
+		> label { width: 100px; float: left; font-weight: bold; }
+	}
+}
+
 
 #iDx-nav-container {
 	position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 37px; 
@@ -284,7 +295,7 @@ h4 {
 }
 
 
-#iDx-content-colormath ul {
+#iDx-content-colormath ul.iDx-listing {
 	float: left;  width: 300px; margin-top: 20px;
 	> li { float: left; width: 150px; }
 

@@ -38,8 +38,10 @@
 			<h4>What is iDropper?</h4>
 			<div class="iDx-content2-block">
 				<p>
-				iDropper is a color picker plugin for jQuery. It was built out of frustration from the lack of basic features in existing color pickers (mainly dimension setting). iDropper has exposed math functions so you can get creative with your implementation.
+				iDropper is a color picker plugin for jQuery. It was built out of frustration from the lack of basic features in existing color pickers (mainly dimension setting). In short, iDropper is a result of real practical needs and its features were implemented with direct UI and UX designer feedbacks.
 				</p>
+				<p>
+				iDropper doesn't decide layout and element positioning for you; it's flexible in that you can move the "picker" containers around and even outside of the element context in which you instantiated it with and all functionality will be intact. iDropper chains and provides proper context inside callbacks so you can write cleaner code and instatiate on selectors which return multiple elements. iDropper uses the bind and trigger paradigm so you can attach multiple callbacks to a single event. iDropper has exposed math functions so you can get creative with your implementation.</p>
 			</div>
 
 			<h4>Links</h4>
@@ -53,10 +55,9 @@
 
 			<h4>Quick Demo</h4>
 			<div class="iDx-content2-block">
-				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information. Code to produce this page's style changer and button dditor is below the demo.
+				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information. Notice the navigation at the top of the page, link colors around the page, and the gradient on the "add to cart" button changing along with little shadow and text color details on it. Code to produce this page's style changer and button editor is below the demo.
 				</p>
 				<div id="iDx-ex-demobtn">
-
 					<div id="iDx-ex-demobtn-view">
 						<a class="demobtn clearfix">
 							<span class="demobtn-contain">
@@ -164,7 +165,17 @@ iDropperContainer = $('#container').iDropper({
 			<h4>Callbacks/Event Bindings</h4>
 			<div class="iDx-content2-block">
 				<p>
-					There are four iDropper events to bind to (change, start, drag, end) and two ways to bind them; by passing in callbacks during instatiation and by calling the bind method after instatiation. The benefit of binding is that you can attach callbacks after instatiation, in case you don't have that information ahead of time. Also, by using bind, you can attach multiple callbacks to a single event. These callback functions receive the iDropper instance as context, and the jQuery element that iDropper was instatiated on can be referenced through the instance's "el" key.
+					There are four iDropper events to bind to.
+
+					<ul class="labels-list">
+						<li><label>change</label> <span>called during a mouseup after a drag and valid input keyup</span></li>
+						<li><label>start</label> <span>called during a drag start</span></li>
+						<li><label>drag</label> <span>called at each step of a drag</span></li>
+						<li><label>end</label> <span>called during a mouse up after a drag</span></li>
+					</ul>
+					
+					There are two ways to bind events; by passing in callbacks during instatiation and by calling the bind method after instatiation. The benefit of binding is that you can attach callbacks after instatiation, in case you don't have that information ahead of time. Also, by using bind, you can attach multiple callbacks to a single event. These callback functions receive the iDropper instance as context, and the jQuery element that iDropper was instatiated on can be referenced through the instance's "el" key.
+				</p>
 <pre class="prettyprint lang-js">
 // Callbacks passed in during instatiation 
 $('#container').iDropper({
@@ -174,14 +185,12 @@ $('#container').iDropper({
    onEnd: function(hex) { console.log(hex); }
 });
 
-
 // Binding callbacks after instatiation
 var iDropperInstance = $('#container').iDropper().data("iDropper");
 iDropperInstance.bind("change", function(hex) { console.log(hex); });
 iDropperInstance.bind("start", function(hex) { console.log(hex); });
 iDropperInstance.bind("drag", function(hex) { console.log(hex); });
 iDropperInstance.bind("end", function(hex) { console.log(hex); });
-
 
 // Bind method returns instance, so you can chain like so
 $('#container').iDropper().data("iDropper")
@@ -190,7 +199,6 @@ $('#container').iDropper().data("iDropper")
    .bind("drag", function(hex) { console.log(hex); })
    .bind("end", function(hex) { console.log(hex); });
 </pre>
-				</p>
 			</div>
 
 			<h4>Basic Usage Demo</h4>
@@ -309,14 +317,90 @@ $('#iDx-ex-usage').iDropper({
 		
 		<h3>Color math<a class="iDx-anchor" name="colormath"></a></h3>
 		<div class="iDx-content-block" id="iDx-content-colormath">
+
+			<h4>Color Math overview</h4>
 			<div class="iDx-content2-block">
 				<p>
-				iDropper ships with color math functions. You can get access to these utility functions by referencing $.iDropper, or if you're in the scope of your callback function, this.utility.
+				iDropper ships with color math functions that can alter the color input with the HSL-transformation. For this reason, the color input can be a HEX string OR an array that represents an HSL color. Using HEX as input is meant for functional purposes and using HSL is meant for instance purposes; this is because an HSL value is available as a function parameter inside a callback. For performance reasons, you should use HSL as input when available to reduce heavy conversions, especially during a drag event.
 				</p>
 
+				<p>In iDropper, HSL is defined by an array where HSL[0] is the hue, HSL[1] is the saturation, and HSL[2] is the lightness. The HSL scale is used in favor over the HSV scale because HSL acts more independently with regards to the saturation and value domain. <a href="http://en.wikipedia.org/wiki/HSL_and_HSV" title="More information on HSL and HSV">More information on HSL &amp; HSV</a>. The HSL ranges are as follows.
+					<ul class="labels-list">
+						<li><label>Hue:</label>         <span>[0, 360)</span></li>
+						<li><label>Saturation:</label>  <span>[0, 1)</span></li>
+						<li><label>Value:</label>       <span>[0, 1)</span></li>
+					</ul>
+				</p>
+
+				<p>The color math functions available in iDropper are outlined below. These functions adhere to the domain ranges outlined above; hue scale will be [0, 360), all others will be [0, 1).
+					<ul class="labels-list">
+						<li><label>darken</label> <span>Makes color darker by a certain percent</span></li>
+						<li><label>lighten</label> <span>Makes color lighter by a certain percent</span></li>
+						<li><label>saturate</label> <span>Makes color more saturate by a certain percent</span></li>
+						<li><label>desaturate</label> <span>Makes color less saturate by a certain percent</span></li>
+						<li><label>changeHue</label> <span>Shifts the hue by a certain degree</span></li>
+						<li><label>complement</label> <span>Shifts the hue by 180 degrees</span></li>
+						<li><label>changeColor</label> <span>Custom color transformation</span></li>
+					</ul>
+					changeColor takes an object with the keys "h", "s", and "l" representing the change in hue, saturation, and lightness. Further, you can set "wrap" to true if you want to wrap the value when a range limit is reached. Fox example, a color has a hue of 300 and a hue shift of 80 is performed. Without setting "wrap" will put the hue at 359 degrees, but with "wrap" set, the hue will be 20 degrees.
+				</p>
+			</div>
+
+			<h4>Color Math on a Functional level</h4>
+			<div class="iDx-content2-block">
+				<p>
+				Color math can be performed on any color and without ever instatiating iDropper by referencing them inside the $.iDropper object. If iDropper is instatiated, you can get color math functions inside a function callback simply by looking at the "this.utils" object. It's the same number of characters so you're not saving any bytes, in fact the utils object is a direct reference to $.iDropper. Using one or the other is just personal preference.
+<pre class="prettyprint lang-js">
+// Darkens <span style="background: #828e25">#828e25</span> by 20%, returns <span style="background: #373d0f">#373d0f</span>
+$.iDropper.darken("#828e25", .2);
+
+// Saturate <span style="background: #828e25">#828e25</span> by 40%, returns <span style="background: #9db101">#9db101</span>
+$.iDropper.saturate("#828e25", .4);
+
+// Color: <span style="background: #828e25">#828e25</span>
+// Hue shift 200 degrees, saturate 40%, and up lightness 20%, wrap range
+// returns <span style="background: #801bfd">#801bfd</span>
+$.iDropper.changeColor("#828e25", {h: 200, s: .4, l: .2, wrap: true});
+</pre>
+				</p>
+			</div>
+
+			<h4>Color Math on an Instance level</h4>
+			<div class="iDx-content2-block">
+				<p>
+				Inside a callback, you can call these color math methods directly from "this", just omit the color input since the current actice color will be used. Example below.
+				<p>
+<pre class="prettyprint lang-js">
+var $id1 = $('#iDx-ex-colormath'),
+    $id1Change = $('#id1_change'),
+    $id1Hueshift = $('#id1_hueshift'),
+    $id1Darken = $('#id1_darken'),
+    $id1Lighten = $('#id1_lighten'),
+    $id1Saturate = $('#id1_sat'),
+    $id1Desaturate = $('#id1_desat');
+
+$id1.iDropper({
+   color: '#b4bb83',
+   onDrag: function(hex) {
+      var
+      hue = this.changeHue(180),
+      dar = this.darken(.25),
+      lig = this.lighten(.25),
+      sat = this.saturate(.25),
+      des = this.desaturate(.25);
+
+      $id1Change.html(hex).css({'border-color': hex});
+      $id1Hueshift.html(hue).css({'border-color': hue});
+      $id1Lighten.html(lig).css({'border-color': lig});
+      $id1Darken.html(dar).css({'border-color': dar});
+      $id1Saturate.html(sat).css({'border-color': sat});
+      $id1Desaturate.html(des).css({'border-color': des});
+   }
+});
+</pre>
 				<ul class="labels iDx-listing">
 					<li>
-						<label>"drag" color: </label>
+						<label>Original Color: </label>
 						<span id="id1_change"></span>
 					</li>
 					<li>
@@ -341,43 +425,6 @@ $('#iDx-ex-usage').iDropper({
 					</li>
 				</ul>
 				<div id="iDx-ex-colormath" class="clearfix"></div>
-
-<pre class="prettyprint lang-js">
-// Code for the above example
-var $id1 = $('#iDx-ex-colormath'),
-   id1Change = $('#id1_change'),
-   id1Hueshift = $('#id1_hueshift'),
-   id1Darken = $('#id1_darken'),
-   id1Lighten = $('#id1_lighten'),
-   id1Saturate = $('#id1_sat'),
-   id1Desaturate = $('#id1_desat');
-
-$id1.iDropper({
-   color: '#b4bb83',
-   onDrag: function(hex) {
-      var
-      hue = $.iDropper.changeHue(hex, 180),
-      dar = $.iDropper.darken(hex, .25),
-      lig = $.iDropper.lighten(hex, .25),
-      sat = $.iDropper.saturate(hex, .25),
-      des = $.iDropper.desaturate(hex, .25),
-
-      hexText = $.iDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-      hueText = $.iDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-      darText = $.iDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-      ligText = $.iDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-      satText = $.iDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-      desText = $.iDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true});
-
-      $id1Change.html(hex).css({'background-color': hex, 'color': hexText});
-      $id1Hueshift.html(hue).css({'background-color': hue, 'color': hueText});
-      $id1Lighten.html(lig).css({'background-color': lig, 'color': ligText});
-      $id1Darken.html(dar).css({'background-color': dar, 'color': darText});
-      $id1Saturate.html(sat).css({'background-color': sat, 'color': satText});
-      $id1Desaturate.html(des).css({'background-color': des, 'color': desText});
-   }
-});
-</pre>
 			</div>
 		</div>
 
@@ -480,37 +527,30 @@ $("#iDx-ex-dim160").iDropper({ size: 160, color: "#0000ff" });
 
 
 var $id1 = $('#iDx-ex-colormath'),
-	$id1Change = $('#id1_change'),
-	$id1Hueshift = $('#id1_hueshift'),
-	$id1Darken = $('#id1_darken'),
-	$id1Lighten = $('#id1_lighten'),
-	$id1Saturate = $('#id1_sat'),
-	$id1Desaturate = $('#id1_desat');
+   $id1Change = $('#id1_change'),
+   $id1Hueshift = $('#id1_hueshift'),
+   $id1Darken = $('#id1_darken'),
+   $id1Lighten = $('#id1_lighten'),
+   $id1Saturate = $('#id1_sat'),
+   $id1Desaturate = $('#id1_desat');
 
 $id1.iDropper({
-	color: '#b4bb83',
-	onDrag: function(hex) {
-		var
-		hue = $.iDropper.changeHue(hex, 180),
-		dar = $.iDropper.darken(hex, .25),
-		lig = $.iDropper.lighten(hex, .25),
-		sat = $.iDropper.saturate(hex, .25),
-		des = $.iDropper.desaturate(hex, .25),
+   color: '#b4bb83',
+   onDrag: function(hex) {
+      var
+      hue = this.changeHue(180),
+      dar = this.darken(.25),
+      lig = this.lighten(.25),
+      sat = this.saturate(.25),
+      des = this.desaturate(.25);
 
-		hexText = $.iDropper.changeColor(hex, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		hueText = $.iDropper.changeColor(hue, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		darText = $.iDropper.changeColor(dar, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		ligText = $.iDropper.changeColor(lig, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		satText = $.iDropper.changeColor(sat, {h: 180, l: 0.5, s: 0.5, wrap: true}),
-		desText = $.iDropper.changeColor(des, {h: 180, l: 0.5, s: 0.5, wrap: true});
-
-		$id1Change.html(hex).css({'background-color': hex, 'color': hexText});
-		$id1Hueshift.html(hue).css({'background-color': hue, 'color': hueText});
-		$id1Lighten.html(lig).css({'background-color': lig, 'color': ligText});
-		$id1Darken.html(dar).css({'background-color': dar, 'color': darText});
-		$id1Saturate.html(sat).css({'background-color': sat, 'color': satText});
-		$id1Desaturate.html(des).css({'background-color': des, 'color': desText});
-	}
+      $id1Change.html(hex).css({'border-color': hex});
+      $id1Hueshift.html(hue).css({'border-color': hue});
+      $id1Lighten.html(lig).css({'border-color': lig});
+      $id1Darken.html(dar).css({'border-color': dar});
+      $id1Saturate.html(sat).css({'border-color': sat});
+      $id1Desaturate.html(des).css({'border-color': des});
+   }
 });
 
 </script>

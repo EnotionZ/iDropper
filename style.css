@@ -153,9 +153,24 @@ a {
 a:hover {
   color: #666;
 }
+p {
+  margin: 0 0 10px;
+}
 .iDx-container {
   width: 700px;
   margin: 0 auto;
+}
+.labels-list {
+  padding-left: 20px;
+  margin: 0 0 10px;
+}
+.labels-list > li {
+  clear: both;
+}
+.labels-list > li > label {
+  width: 100px;
+  float: left;
+  font-weight: bold;
 }
 #iDx-nav-container {
   position: fixed;
@@ -306,7 +321,7 @@ a:hover {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#c9e3a3', EndColorStr='#9ccc54');
   border: 1px solid #678f2b;
 }
-.demobtn .demobtn-contain .demobtn-text {
+.demobtn-text {
   float: left;
   margin-left: 5px;
   padding-right: 7px;
@@ -316,7 +331,7 @@ a:hover {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
   border-right: 1px solid #678f2b;
 }
-.demobtn .demobtn-contain .demobtn-cost {
+.demobtn-cost {
   float: left;
   height: 100%;
   padding: 0 0 0 8px;
@@ -326,12 +341,12 @@ a:hover {
   color: #4b681f;
   border-left: 1px solid #c9e3a3;
 }
-.demobtn .demobtn-contain .demobtn-cost .demobtn-dollar {
+.demobtn-cost .demobtn-dollar {
   float: left;
   margin-top: -4px;
   font-size: 14px;
 }
-.demobtn .demobtn-contain .demobtn-cost .demobtn-price {
+.demobtn-cost .demobtn-price {
   float: left;
   font-size: 18px;
   line-height: 36px;
@@ -426,21 +441,21 @@ h4 {
   float: left;
   margin-right: 50px;
 }
-#iDx-content-colormath ul {
+#iDx-content-colormath ul.iDx-listing {
   float: left;
   width: 300px;
   margin-top: 20px;
 }
-#iDx-content-colormath ul > li {
+#iDx-content-colormath ul.iDx-listing > li {
   float: left;
   width: 150px;
 }
-#iDx-content-colormath ul .labels label {
+#iDx-content-colormath ul.iDx-listing .labels label {
   display: block;
   width: 170px;
   float: left;
 }
-#iDx-content-colormath ul .labels span {
+#iDx-content-colormath ul.iDx-listing .labels span {
   display: block;
   float: left;
   width: 70px;
