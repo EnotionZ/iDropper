@@ -113,6 +113,12 @@
 	HexToHsv = function(hex) { return RgbToHsv(HexToRgb(hex)); },
 	HsvToHex = function(hsv) { return _RgbToHex(HsvToRgb(hsv)); },
 
+	HsvToHsl = function(hsv) {
+		var h=hsv[0], s=hsv[1], v=hsv[2],
+		L = v-.5*v*s,
+		S = v*s/(1-Math.abs(2*L-1));
+		return [h,S,L];
+	},
 
 	/**
 	 * Forces the number to be within a range. Format is [lower, upper)
@@ -145,8 +151,16 @@
 	 */
 	changeColor = function(hex, changes) {
 		if(typeof changes !== 'object') return null;
+		var hsl;
 
-		var hsl = HexToHsl(hex);
+		if(isValidHex(hex)) {
+			hsl = HexToHsl(hex);
+		} else if(Object.prototype.toString.call(hex) === '[object Array]' && hex.length === 3) {
+			hsl = [hex[0], hex[1], hex[2]];
+		} else {
+			return null;
+		}
+
 		if(typeof changes.h === 'number') {
 			hsl[0] = wrapInRange(hsl[0] + changes.h, 0, 360, true);
 		}
@@ -178,7 +192,8 @@
 		changeHue:        changeHue,
 		complement:       complement,
 		changeColor:      changeColor,
-		RgbToHex:         RgbToHex
+		RgbToHex:         RgbToHex,
+		HslToHex:         HslToHex
 	};
 
 
@@ -308,7 +323,7 @@
 					fn.updateInput(hex);
 
 					// Option to disable "change" callback (in case we *only* want to update the color)
-					if(!disableCallback) self.trigger('change', hex);
+					if(!disableCallback) self.trigger('change', hex, self.hsl);
 				}
 				return hex;
 			},
@@ -317,7 +332,11 @@
 				hex = RgbToHex(hex);
 				if(isValidHex(hex)) {
 					var hsv = HexToHsv(hex);
-					activeHSV = hsv;
+
+					// sets instance's active hsv and color
+					activeHSV = hsv
+					self.hex = hex;
+					self.hsl = HsvToHsl(hsv);
 
 					// Setting hue
 					if(layout === 'ring') fn.huedrag({theta: (270-hsv[0])/radiansToDegrees});
@@ -359,20 +378,19 @@
 			 */
 			inputKeyup: function(e) {
 				var hex = fn.setColor($input.val());
-				if(hex) self.trigger('change', hex);
+				if(hex) self.trigger('change', hex, self.hsl);
 				return false;
 			},
 
 
 			mousedown: function(e) {
 				mousedownFlag = true;
-				self.trigger('start', HsvToHex(activeHSV));
+				self.trigger('start', self.hex, self.hsl);
 			},
 			mouseup: function(e) {
-				var hex = HsvToHex(activeHSV);
 				if(mousedownFlag) {
-					self.trigger('end', hex);
-					self.trigger('change', hex);
+					self.trigger('end', self.hex, self.hsl);
+					self.trigger('change', self.hex, self.hsl);
 				}
 				mousedownFlag = false;
 			},
@@ -383,11 +401,14 @@
 				if(m.x < 0) m.x = 0;
 				if(m.y < 0) m.y = 0;
 
-				fn[dragInfo.type](m); // fires either svdrag or huedrag
+				fn[dragInfo.type](m); // fires either svdrag or huedrag, activeHSV gets updated
 
 				if(hex = fn.setPreview()) {
+					self.hex = hex;
+					self.hsl = HsvToHsl(activeHSV);
+
 					fn.updateInput(hex);
-					self.trigger('drag', hex);
+					self.trigger('drag', hex, self.hsl);
 				}
 			},
 
@@ -461,7 +482,17 @@
 			updateInput: function(hex) {
 				if(self.hideHash) hex = hex.substr(1);
 				$input.val(hex);
-			}
+			},
+
+
+			colorMath: function(hex, set) { if(set) self.set(hex); return hex; },
+			darken: function(val, set) { return fn.colorMath(darken(self.hsl, val), set); },
+			lighten: function(val, set) { return fn.colorMath(lighten(self.hsl, val), set); },
+			saturate: function(val, set) { return fn.colorMath(saturate(self.hsl, val), set); },
+			desaturate: function(val, set) { return fn.colorMath(desaturate(self.hsl, val), set); },
+			changeHue: function(val, set) { return fn.colorMath(changeHue(self.hsl, val), set); },
+			complement: function(val, set) { return fn.colorMath(complement(self.hsl, val), set); },
+			changeColor: function(changes, set) { return fn.colorMath(changeColor(self.hsl, changes), set); }
 		};
 
 
@@ -497,8 +528,15 @@
 		if(typeof opts.onEnd === "function") this.bind('end', opts.onEnd);
 
 
-		this.set =     fn.set;        // Expose the set [color on iDropper] method
-		this.utils =   $.iDropper;    // Expose color math and utility functions
+		this.set =         fn.set;        // Expose the set [color on iDropper] method
+		this.darken =      fn.darken;
+		this.lighten =     fn.lighten;
+		this.saturate =    fn.saturate;
+		this.desaturate =  fn.desaturate;
+		this.changeHue =   fn.changeHue;
+		this.complement =  fn.complement;
+		this.changeColor = fn.changeColorb;
+		this.utils =       $.iDropper;    // Expose color math and utility functions
 
 
 		/**
@@ -543,15 +581,13 @@
 		this.hooks[event].push(fn);
 		return this;
 	};
-	IDropper.prototype.trigger = function(event, param, context) {
-		var fns = this.hooks[event];
+	IDropper.prototype.trigger = function(event) {
+		var fns = this.hooks[event], args;
 		if(!fns) return false;
+
+		args = Array.prototype.slice.call(arguments, 1);
 		for(var i=0; i<fns.length; i++) {
-			if(context) {
-				fns[i].call(context,param);
-			} else {
-				fns[i](param);
-			}
+			fns[i].apply(this, args);
 		}
 	};
 
