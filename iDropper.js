@@ -179,7 +179,21 @@
 	saturate = function(hex, amt) { return changeColor(hex, {'s': amt}); },
 	desaturate = function(hex, amt) { return saturate(hex, -amt); },
 	changeHue = function(hex, deg) { return changeColor(hex, {'h': deg}); },
-	complement = function(hex) { return changeColor(hex, {'h': 180}); };
+	complement = function(hex) { return changeColor(hex, {'h': 180}); },
+
+	/**
+	 * Function to turn write out CSS rule
+	 * @param      selector      String css selector
+	 * @param      attrObj       Object where key represents attribute and val represents value
+	 */
+	cssStringify = function(selector, attrObj) {
+		var str = selector + " {\n";
+		for(var key in attrObj) if(attrObj.hasOwnProperty(key)) {
+			str += "\t" + key + ": " + attrObj[key] + ";\n";
+		}
+		str += "}\n";
+		return str;
+	};
 
 
 	/**
@@ -194,7 +208,8 @@
 		complement:       complement,
 		changeColor:      changeColor,
 		RgbToHex:         RgbToHex,
-		HslToHex:         HslToHex
+		HslToHex:         HslToHex,
+		cssStringify:     cssStringify
 	};
 
 
