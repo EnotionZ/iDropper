@@ -142,7 +142,7 @@ table {
 /* IE */
 body {
   font: normal 12px/16px "Helvetica Neue", "Arial";
-  background: #f4f4f4 url('demo-images/linen.png') fixed;
+  background: #9ed749 url('demo-images/linen_transparent.png') fixed;
   margin-bottom: 40px;
 }
 a {

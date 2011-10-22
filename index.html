@@ -88,15 +88,17 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
       util = $.iDropper,
       darken20 = this.darken(.2),
       darken30 = this.darken(.3),
-      lighten20 = this.lighten(.2);
+      lighten20 = this.lighten(.2),
+      lightBorder = this.changeColor({l: -0.28, s: -0.45});
 
       $styleBlock.html(
          "a {color: " + this.darken(.1) + ";}\n" +
+         "body {background-color: " + this.saturate(.1) + ";}\n" +
          "#iDx-nav-container {\
             background:" + this.changeColor({l: -0.36, s: -0.42}) + ";\n\
-            border-color:" + this.changeColor({l: -0.3, s: -0.45}) + ";}\n" +
+            border-color:" + lightBorder + ";}\n" +
          "#iDx-nav li {\
-            border-left-color:" + this.changeColor({l: -0.25, s: -0.45}) + ";\n\
+            border-left-color:" + lightBorder + ";\n\
             border-right-color:" + this.changeColor({l: -0.43, s: -0.45}) + ";}\n" +
          "#iDx-nav a { color:" + hex + ";}\n" +
 
@@ -457,15 +459,17 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 		util = $.iDropper,
 		darken20 = this.darken(.2),
 		darken30 = this.darken(.3),
-		lighten20 = this.lighten(.2);
+		lighten20 = this.lighten(.2),
+		lightBorder = this.changeColor({l: -0.28, s: -0.45});
 
 		$styleBlock.html(
 			"a {color: " + this.darken(.1) + ";}\n" +
+			"body {background-color: " + this.saturate(.1) + ";}\n" +
 			"#iDx-nav-container {\
 				background:" + this.changeColor({l: -0.36, s: -0.42}) + ";\n\
-				border-color:" + this.changeColor({l: -0.3, s: -0.45}) + ";}\n" +
+				border-color:" + lightBorder + ";}\n" +
 			"#iDx-nav li {\
-				border-left-color:" + this.changeColor({l: -0.25, s: -0.45}) + ";\n\
+				border-left-color:" + lightBorder + ";\n\
 				border-right-color:" + this.changeColor({l: -0.43, s: -0.45}) + ";}\n" +
 			"#iDx-nav a { color:" + hex + ";}\n" +
 
