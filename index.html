@@ -55,7 +55,7 @@
 			</div>
 		</div>
 
-		<h3>Quick Demo<a class="iDx-anchor" name="demo"></a></h3>
+		<h3>iDropper Demo<a class="iDx-anchor" name="demo"></a></h3>
 		<div class="iDx-content-block" id="iDx-content-demo">
 			<div class="iDx-content2-block">
 				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information to give this page a completely new theme.
@@ -406,6 +406,7 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 	onDrag: function(hex, hsl) {
 		var
 		cssStringify = $.iDropper.cssStringify,
+		bodybg = this.saturate(.1),
 		darken20 = this.darken(.2),
 		darken30 = this.darken(.3),
 		lighten20 = this.lighten(.2),
@@ -414,7 +415,7 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 		h3border = this.changeColor({l: 0.25, s: -0.30});
 
 		$styleBlock.html(
-			cssStringify("body", { "background-color": this.saturate(.1) }) +
+			cssStringify("body", { "background-color": bodybg }) +
 			cssStringify("a", { "color": this.darken(.1) }) +
 			cssStringify("h3", { "color": darken30, "background": h3bg, "border-color": h3border }) +
 			cssStringify("pre.prettyprint", {"background": h3bg }) +
