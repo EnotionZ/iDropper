@@ -427,20 +427,18 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 			}) +
 			cssStringify("#iDx-nav a", { "color": hex }) +
 			cssStringify(".demobtn", { "background": h3border }) +
+			cssStringify(".demobtn-text", { "border-right": "1px solid "+darken20}) +
+			cssStringify(".demobtn-cost", { "border-color": lighten20, "color": darken30 }) +
 			cssStringify(".demobtn .demobtn-contain", {
 				"border-color": darken20,
 				"background-color": hex,
 				"background-image": "-moz-linear-gradient(top, "+lighten20+", "+hex+")",
-				"background-image": "-o-linear-gradient(top, " +lighten20+", "+hex+")",
-				"background-image": "-webkit-gradient(linear,left top,left bottom,color-stop(0, " + lighten20 +"),color-stop(1, " + hex + "))",
-				"background-image": "linear-gradient(top, "+lighten20+", "+hex+")",
-				"background-image": "-webkit-linear-gradient("+lighten20+", "+hex+")",
 				"filter": "progid:DXImageTransform.Microsoft.gradient(startColorStr='" + lighten20 + "', EndColorStr='" + hex +")"
 			}) +
-			cssStringify(".demobtn .demobtn-contain .demobtn-text", { "border-right": "1px solid "+darken20}) +
-			cssStringify(".demobtn .demobtn-contain .demobtn-cost", {
-				"border-left": "1px solid "+lighten20,
-				"color": darken30 })
+			cssStringify(".demobtn .demobtn-contain", { "background-image": "-o-linear-gradient(top, " +lighten20+", "+hex+")"})+
+			cssStringify(".demobtn .demobtn-contain", { "background-image": "-webkit-gradient(linear,left top,left bottom,color-stop(0, " + lighten20 +"),color-stop(1, " + hex + "))"})+
+			cssStringify(".demobtn .demobtn-contain", { "background-image": "linear-gradient(top, "+lighten20+", "+hex+")"})+
+			cssStringify(".demobtn .demobtn-contain", { "background-image": "-webkit-linear-gradient("+lighten20+", "+hex+")"})
 		);
 	}
 }),
