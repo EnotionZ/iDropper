@@ -216,7 +216,6 @@ h4 {
 }
 #iDx-nav li {
   float: left;
-  padding: 0 10px;
   border-left: 1px solid #525849;
   border-right: 1px solid #23251f;
   height: 44px;
@@ -232,14 +231,17 @@ h4 {
 #iDx-nav a {
   display: block;
   cursor: pointer;
+  padding: 0 10px;
+  height: 37px;
+  border-bottom: 7px solid #454a3d;
   color: #9ccc54;
-  height: 44px;
   text-decoration: none;
   font: 700 12px/38px "Helvetica Neue", "Arial";
   text-shadow: 0 1px 1px #000;
 }
 #iDx-nav a:hover {
   color: #ddd;
+  border-color: #4b681f;
 }
 .iDx-content {
   background-color: #fff;

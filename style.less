@@ -165,18 +165,20 @@ h4 {
 		&.first-child { border-left: 0; padding: 0; }
 		&.last-child { border-right: 0; padding: 0; }
 		
-		float: left; padding: 0 10px;
+		float: left;
 		border-left: 1px solid desaturate(darken(@color,25), 45);
 		border-right: 1px solid desaturate(darken(@color,43), 45);
 		height: 44px;
 	}
 	a {
 		display: block; cursor: pointer;
-		color: @color; height: 44px;
+		padding: 0 10px; height: 37px;
+		border-bottom: 7px solid desaturate(darken(@color,30), 45);
+		color: @color;
 		text-decoration: none;
 		font: 700 12px/38px "Helvetica Neue", "Arial";
 		text-shadow: 0 1px 1px #000;
-		&:hover { color: #ddd; }
+		&:hover { color: #ddd; border-color: @darken30; }
 	}
 }
 

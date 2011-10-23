@@ -423,6 +423,8 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 				"background": this.changeColor({l: -0.36, s: -0.42}),
 				"border-color": lightBorder
 			}) +
+			cssStringify("#iDx-nav a", { "border-color": lightBorder }) +
+			cssStringify("#iDx-nav a:hover", { "border-color": darken30 }) +
 			cssStringify("#iDx-nav li", {
 				"border-left-color": lightBorder,
 				"border-right-color": this.changeColor({l: -0.43, s: -0.45})
