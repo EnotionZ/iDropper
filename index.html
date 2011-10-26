@@ -8,7 +8,6 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<script src="http://enki.s3-website-us-east-1.amazonaws.com/javascripts/google-code-prettify/prettify.js" type="text/javascript"></script>
 
-	<style id="style_block"></style>
 </head>
 <body>
 
@@ -153,7 +152,7 @@ $('#container').iDropper().data("iDropper")
 			</div>
 
 			<h4>Basic Usage Demo</h4>
-			<div class="iDx-content2-block">
+			<div class="iDx-content2-block clearfix">
 <pre class="prettyprint lang-js">
 // This is the instatiation call that produced the demo below
 var
@@ -202,7 +201,7 @@ $('#iDx-ex-usage').iDropper({
 
 
 		<h3>Dimension<a class="iDx-anchor" name="dimension"></a></h3>
-		<div class="iDx-content-block" id="iDx-content-dimension">
+		<div class="iDx-content-block clearfix" id="iDx-content-dimension">
 			<div class="iDx-content2-block">
 				<p>
 				One of the cool unique features in iDropper is that it supports setting dimension. To set the dimension of iDropper, set the "size" key when initializing with an integer. The width and height of the hue-saturation scale will be set to this value. Now, iDropper can be tailored to fit into any design you're trying to build out!
@@ -270,7 +269,7 @@ $('#iDx-ex-usage').iDropper({
 		<div class="iDx-content-block" id="iDx-content-colormath">
 
 			<h4>Color Math overview</h4>
-			<div class="iDx-content2-block">
+			<div class="iDx-content2-block clearfix">
 				<p>
 				iDropper ships with color math functions that can alter the color input with the HSL-transformation. For this reason, the color input can be a HEX string OR an array that represents an HSL color. Using HEX as input is meant for functional purposes and using HSL is meant for instance purposes; this is because an HSL value is available as a function parameter inside a callback. For performance reasons, you should use HSL as input when available to reduce heavy conversions, especially during a drag event.
 				</p>
@@ -386,6 +385,7 @@ $id1.iDropper({
 
 </div>
 
+<div id="style_block"></div>
 
 
 <script src="iDropper.js"></script>
@@ -397,6 +397,7 @@ var
 
 // grab style element
 $styleBlock = $("#style_block"),
+sblock = document.getElementById("style_block"),
 
 // Call iDropper and write style rules into the style block's innerHTML
 demobtnContainer = $("#iDx-ex-demobtn").iDropper({
@@ -414,11 +415,11 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 		h3bg = this.changeColor({l: 0.35, s: -0.4}),
 		h3border = this.changeColor({l: 0.25, s: -0.30});
 
-		$styleBlock.html(
+		$styleBlock.html("<style>"+
 			cssStringify("body", { "background-color": bodybg }) +
 			cssStringify("a", { "color": this.darken(.1) }) +
 			cssStringify("h3", { "color": darken30, "background": h3bg, "border-color": h3border }) +
-			cssStringify("pre.prettyprint", {"background": h3bg }) +
+			cssStringify("pre.prettyprint", {"background": h3bg, "outline": "1px solid " + h3border }) +
 			cssStringify("#iDx-nav-container", {
 				"background": this.changeColor({l: -0.36, s: -0.42}),
 				"border-color": lightBorder
@@ -437,12 +438,13 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 				"border-color": darken20,
 				"background-color": hex,
 				"background-image": "-moz-linear-gradient(top, "+lighten20+", "+hex+")",
-				"filter": "progid:DXImageTransform.Microsoft.gradient(startColorStr='" + lighten20 + "', EndColorStr='" + hex +")"
+				"_filter": "progid:DXImageTransform.Microsoft.gradient(startColorStr='" + lighten20 + "', EndColorStr='" + hex +")\9"
 			}) +
 			cssStringify(".demobtn .demobtn-contain", { "background-image": "-o-linear-gradient(top, " +lighten20+", "+hex+")"})+
 			cssStringify(".demobtn .demobtn-contain", { "background-image": "-webkit-gradient(linear,left top,left bottom,color-stop(0, " + lighten20 +"),color-stop(1, " + hex + "))"})+
 			cssStringify(".demobtn .demobtn-contain", { "background-image": "linear-gradient(top, "+lighten20+", "+hex+")"})+
-			cssStringify(".demobtn .demobtn-contain", { "background-image": "-webkit-linear-gradient("+lighten20+", "+hex+")"})
+			cssStringify(".demobtn .demobtn-contain", { "background-image": "-webkit-linear-gradient("+lighten20+", "+hex+")"}) +
+			"</style>"
 		);
 	}
 }),

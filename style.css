@@ -341,7 +341,7 @@ h4 {
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d5e9b6), color-stop(1, #9ccc54));
   background-image: -webkit-linear-gradient(#d5e9b6, #9ccc54);
   background-image: linear-gradient(top, #d5e9b6, #9ccc54);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#d5e9b6', EndColorStr='#9ccc54');
+  _filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#d5e9b6', EndColorStr='#9ccc54');
   border: 1px solid #678f2b;
 }
 .demobtn-text {
@@ -436,7 +436,7 @@ pre.prettyprint {
   margin: 2px 0 20px;
   background-color: #eaece6;
   border: 2px solid #fff;
-  outline: 1px solid #ddd;
+  outline: 1px solid #d2dbc4;
   padding: 10px;
   font-family: monospace;
 }
