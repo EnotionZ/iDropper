@@ -11,7 +11,6 @@
 </head>
 <body>
 
-<a href="http://github.com/enotionz/idropper"><img style="position: fixed; z-index: 12; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/ce742187c818c67d98af16f96ed21c00160c234a/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
 
 
 <div id="iDx-nav-container">
@@ -21,14 +20,17 @@
 			<li class="first-child">&nbsp;</li>
 			<li><a href="#about" title="About">About</a></li>
 			<li><a href="#demo" title="Demo">Demo</a></li>
-			<li><a href="#usage" title="Basic Usage">Basic Usage</a></li>
-			<li><a href="#dimension" title="Dimension Setting">Dimension</a></li>
+			<li class="iDx-nav-long"><a href="#usage" title="Basic Usage">Basic Usage</a></li>
+			<li class="iDx-nav-long"><a href="#dimension" title="Dimension Setting">Dimension</a></li>
 			<li><a href="#layout"title="Layout Setting">Layout</a></li>
-			<li><a href="#colormath" title="Color Math">Color Math</a></li>
+			<li class="iDx-nav-long"><a href="#colormath" title="Color Math">Color Math</a></li>
 			<li class="last-child">&nbsp;</li>
 		</ul>
 	</div>
 </div>
+
+<a id="forkme-ribbon" href="http://github.com/enotionz/idropper"><img src="https://a248.e.akamai.net/assets.github.com/img/ce742187c818c67d98af16f96ed21c00160c234a/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" alt="Fork me on GitHub"></a>
+
 <div id="iDx-content-container" class="iDx-container">
 	<div class="iDx-content clearfix">
 
@@ -40,13 +42,28 @@
 				<p>
 				iDropper is a color picker plugin for jQuery. It was built out of frustration from the lack of basic features in existing color pickers (mainly dimension setting). In short, iDropper is a result of real practical needs and its features were implemented with direct UI and UX designer feedbacks.
 				</p>
-				<p>
-				iDropper doesn't decide layout and element positioning for you; it's flexible in that you can move the "picker" containers around and even outside of the element context in which you instantiated it with and all functionality will be intact. iDropper chains and provides proper context inside callbacks so you can write cleaner code and instatiate on selectors which return multiple elements. iDropper uses the bind and trigger paradigm so you can attach multiple callbacks to a single event. iDropper has exposed math functions so you can get creative with your implementation.</p>
+				<ul class="iDx-lists">
+				<li>
+					iDropper doesn't assumed a fixed layout or element positioning; it's so flexible that containers can be moved around and even outside of the instantiated element context and all functionality will still be intact. As mentioned above, even the dimension of iDropper can be set.
+				</li>
+				<li>
+					iDropper works across all major browsers. It even works as far back as Internet Explorer 6.
+				</li>
+				<li>
+					iDropper chains and provides proper context inside callbacks so you can write cleaner code and instatiate on multiple-element selectors return multiple elements.
+				</li>
+				<li>
+					iDropper uses the bind and trigger paradigm so you can attach multiple callbacks to a single event.
+				</li>
+				<li>
+					iDropper has exposed math functions so you can get creative with your implementation
+				</li>
+				</ul>
 			</div>
 
 			<h4>Links</h4>
 			<div class="iDx-content2-block">
-				<ul id="iDx-links">
+				<ul class="iDx-lists">
 					<li><a href="https://github.com/enotionz/idropper" title="Fork me on Github">Fork me on Github</a></li>
 					<li><a href="http://twitter.com/enotionz" title="Follow me on Twitter">Follow me on Twitter</a></li>
 					<li><a href="http://dph.am" title="Visit my site">Visit my site</a></li>
@@ -55,7 +72,7 @@
 		</div>
 
 		<h3>iDropper Demo<a class="iDx-anchor" name="demo"></a></h3>
-		<div class="iDx-content-block" id="iDx-content-demo">
+		<div class="iDx-content-block clearfix" id="iDx-content-demo">
 			<div class="iDx-content2-block">
 				<p>Here's a little demo of what iDropper can do. This particular instance of iDropper is tailored in such a way that the saturation/value scale is gone. It essentially means the contrast of a color is locked and the user can only change the hue of the color. Color math is done to the color we get from the drag callback and some cool CSS rules are applied from this information to give this page a completely new theme.
 				</p>

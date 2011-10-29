@@ -193,6 +193,7 @@ h4 {
   font-weight: bold;
 }
 #iDx-nav-container {
+  position: absolute;
   position: fixed;
   z-index: 10;
   left: 0;
@@ -243,6 +244,34 @@ h4 {
   color: #ddd;
   border-color: #4b681f;
 }
+*html #iDx-nav li {
+  width: 40px;
+  text-align: center;
+}
+*html #iDx-nav li.iDx-nav-long {
+  width: 95px;
+}
+*html #iDx-nav li.last-child, *html #iDx-nav li.first-child {
+  width: 2px;
+}
+#forkme-ribbon {
+  position: fixed;
+  z-index: 12;
+  top: 0;
+  left: 0;
+  border: 0;
+}
+*html #forkme-ribbon {
+  position: absolute;
+  cursor: pointer;
+  width: 149px;
+  height: 149px;
+  display: block;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', sizingMethod='crop', src='https://a248.e.akamai.net/assets.github.com/img/ce742187c818c67d98af16f96ed21c00160c234a/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67');
+}
+*html #forkme-ribbon img {
+  display: none;
+}
 .iDx-content {
   background-color: #fff;
   border: 1px solid #cdcdcd;
@@ -285,6 +314,9 @@ h4 {
 #iDx-ex-demobtn {
   margin-bottom: 50px;
 }
+#iDx-ex-demobtn .iD {
+  float: left;
+}
 #iDx-ex-demobtn .iD-preview-input {
   bottom: auto;
   padding: 0;
@@ -303,7 +335,6 @@ h4 {
 #iDx-ex-demobtn-view {
   float: right;
   width: 325px;
-  margin-right: 25px;
   margin-top: 20px;
 }
 #iDx-ex-demobtn-view p {
@@ -375,7 +406,7 @@ h4 {
   line-height: 36px;
   margin-right: 3px;
 }
-#iDx-links {
+.iDx-lists {
   list-style-type: disc;
   list-style-position: inside;
   margin-top: 15px;
@@ -449,9 +480,9 @@ pre.prettyprint {
   width: 300px;
   margin-top: 20px;
 }
-#iDx-content-colormath ul.iDx-listing > li {
+#iDx-content-colormath ul.iDx-listing li {
   float: left;
-  width: 150px;
+  width: 140px;
 }
 #iDx-content-colormath ul.iDx-listing .labels label {
   display: block;
@@ -467,6 +498,6 @@ pre.prettyprint {
   font-weight: bold;
 }
 #iDx-ex-colormath {
-  padding-left: 310px;
+  float: right;
   margin-bottom: 20px;
 }

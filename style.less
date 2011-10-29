@@ -145,7 +145,8 @@ h4 {
 
 
 #iDx-nav-container {
-	position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 37px; 
+	position: absolute; position: fixed; z-index: 10;
+	left: 0; top: 0; width: 100%; height: 37px; 
 	background: desaturate(darken(@color,36), 42);
 	border-bottom: 8px solid desaturate(darken(@color,30), 45);
 
@@ -181,7 +182,23 @@ h4 {
 		&:hover { color: #ddd; border-color: @darken30; }
 	}
 }
+*html #iDx-nav {
+	li {
+		width: 40px; text-align: center;
+		&.iDx-nav-long { width: 95px; }
+		&.last-child, &.first-child { width: 2px; }
+	}
+}
 
+
+#forkme-ribbon { position: fixed; z-index: 12; top: 0; left: 0; border: 0; }
+*html #forkme-ribbon {
+	img { display: none; }
+	position: absolute; cursor: pointer;
+	width: 149px; height: 149px;
+	display: block;
+	filter:~"progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', sizingMethod='crop', src='https://a248.e.akamai.net/assets.github.com/img/ce742187c818c67d98af16f96ed21c00160c234a/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67')";
+}
 
 
 .iDx-content { 
@@ -208,13 +225,14 @@ h4 {
 #iDx-content-about p { margin-bottom: 10px; }
 #iDx-ex-demobtn {
 	margin-bottom: 50px;
+	.iD { float: left; }
 	.iD-preview-input { bottom: auto; padding: 0; }
 	.iD-input-container { display: none; }
 	.iD-sv-container { visibility: hidden; }
 	.iD-preview { width: 100%; height: 100%; border: 0; }
 }
 #iDx-ex-demobtn-view {
-	float: right; width: 325px; margin-right: 25px; margin-top: 20px;
+	float: right; width: 325px; margin-top: 20px;
 	p { clear: both; padding-top: 20px; padding-right: 30px; }
 }
 .demobtn {
@@ -254,7 +272,7 @@ h4 {
 
 
 
-#iDx-links {
+.iDx-lists {
 	list-style-type: disc;
 	list-style-position: inside;
 	margin-top: 15px;
@@ -305,7 +323,7 @@ pre.prettyprint {
 
 #iDx-content-colormath ul.iDx-listing {
 	float: left;  width: 300px; margin-top: 20px;
-	> li { float: left; width: 150px; }
+	li { float: left; width: 140px; }
 
 	.labels label { display: block; width: 170px; float: left;}
 	.labels span {
@@ -315,5 +333,5 @@ pre.prettyprint {
 		font-weight: bold;
 	}
 }
-#iDx-ex-colormath { padding-left: 310px; margin-bottom: 20px; }
+#iDx-ex-colormath { float: right; margin-bottom: 20px; }
 
