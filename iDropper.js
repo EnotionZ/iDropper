@@ -20,12 +20,12 @@
 	HslToRgb = function(hsl) {
 		var h = hsl[0], s = hsl[1], l = hsl[2],
 			c = (1 - Math.abs(2*l - 1))*s,
-			m = l - 0.5*c, rgb = [];
+			m = l - 0.5*c;
 		return RgbFromHCM(h,c,m);
 	},
 	HsvToRgb = function(hsv) {
 		var h = hsv[0], s = hsv[1], v = hsv[2],
-			c = v*s, m = v - c, rgb = [];
+			c = v*s, m = v - c;
 		return RgbFromHCM(h,c,m);
 	},
 	_RgbToHex = function(rgb) {
@@ -56,8 +56,8 @@
 		if(hex.length !== 6) return false;
 
 		var
-		r = parseInt(hex.substr(0,2), 16);
-		g = parseInt(hex.substr(2,2), 16);
+		r = parseInt(hex.substr(0,2), 16),
+		g = parseInt(hex.substr(2,2), 16),
 		b = parseInt(hex.substr(4,2), 16);
 		return [r,g,b];
 	},
@@ -115,7 +115,7 @@
 
 	HsvToHsl = function(hsv) {
 		var h=hsv[0], s=hsv[1], v=hsv[2],
-		L = v-.5*v*s,
+		L = v-0.5*v*s,
 		S = v*s/(1-Math.abs(2*L-1));
 		if(!S) S = 0;
 		return [h,S,L];
@@ -123,10 +123,10 @@
 
 	/**
 	 * Forces the number to be within a range. Format is [lower, upper)
-	 * @param 		n 			Number to force within range
-	 * @param 		lower 		Number lower range
-	 * @param 		upper 		Number upper range
-	 * @param 		wrap 		Boolean optional, determines if number should wrap around
+	 * @param       n           Number to force within range
+	 * @param       lower       Number lower range
+	 * @param       upper       Number upper range
+	 * @param       wrap        Boolean optional, determines if number should wrap around
 	 */
 	wrapInRange = function(n, lower, upper, wrap) {
 		if(lower > upper) { var tmp = lower; lower = upper; upper = tmp; }
@@ -147,8 +147,8 @@
 
 	/**
 	 * Performs color math on the given hex. If changes.wrap is set, will wrap lightness && saturation
-	 * @param 		hex 		String representing the color to change
-	 * @param 		changes 	Object where hash is either 'h', 's', or 'l' with amt value
+	 * @param       hex         String representing the color to change
+	 * @param       changes     Object where hash is either 'h', 's', or 'l' with amt value
 	 */
 	changeColor = function(hex, changes) {
 		if(typeof changes !== 'object') return null;
@@ -233,9 +233,9 @@
 		// Fires active instance's mousedrag
 		mousemove: function(e) { if(activeDropper) activeDropper.trigger('mousedrag', e); }
 	};
-	$body.bind('mousemove.iDfn', iDfn['mousemove']);
-	$body.bind('mouseup.iDfn', iDfn['mouseup']);
-	$body.delegate('img.iD-pick', 'mousedown', iDfn['preventGhost']);
+	$body.bind('mousemove.iDfn', iDfn.mousemove);
+	$body.bind('mouseup.iDfn', iDfn.mouseup);
+	$body.delegate('img.iD-pick', 'mousedown', iDfn.preventGhost);
 
 
 
@@ -255,7 +255,7 @@
 		};
 		$imgPathEl.remove();
 
-	
+
 	/**
 	 * Global dimension setup
 	 */
@@ -277,17 +277,17 @@
 
 	/**
 	 * Color Picker Class
-	 * 
+	 *
 	 * Possible option settings:
-	 * @param 	size 		Integer pixel of the width/height of the square hue/value box
-	 * @param 	onChange 	Function that's triggered when the color selection changes
-	 * @param 	type 		String indicates which type of layout to use. Either 'bar' or 'ring'. Default 'bar'
+	 * @param   size        Integer pixel of the width/height of the square hue/value box
+	 * @param   onChange    Function that's triggered when the color selection changes
+	 * @param   type        String indicates which type of layout to use. Either 'bar' or 'ring'. Default 'bar'
 	 */
 	 var IDropper = function(opts) {
 
 
-	 	this.el =            opts.$el;                                  // jQuery reference to container that instantiated iDropper
-	 	this.hooks =         {};                                        // Event stack (for bind and trigger)
+		this.el =            opts.$el;                                  // jQuery reference to container that instantiated iDropper
+		this.hooks =         {};                                        // Event stack (for bind and trigger)
 		this.hideHash =      opts.hideHash;                             // Toggle for hash character in input field
 
 
@@ -350,7 +350,7 @@
 					var hsv = HexToHsv(hex);
 
 					// sets instance's active hsv and color
-					activeHSV = hsv
+					activeHSV = hsv;
 					self.hex = hex;
 					self.hsl = HsvToHsl(hsv);
 
@@ -392,19 +392,19 @@
 			/**
 			 * Keyup from input field, only trigger "change" event if hex is valid
 			 */
-			inputKeyup: function(e) {
+			inputKeyup: function() {
 				var hex = fn.setColor($input.val());
 				if(hex) self.trigger('change', hex, self.hsl);
 				return false;
 			},
 
 
-			mousedown: function(e) {
+			mousedown: function() {
 				mousedownFlag = true;
 				self.trigger('start', self.hex, self.hsl);
 				$body.addClass('iD-dragging');
 			},
-			mouseup: function(e) {
+			mouseup: function() {
 				if(mousedownFlag) {
 					self.trigger('end', self.hex, self.hsl);
 					self.trigger('change', self.hex, self.hsl);
@@ -421,7 +421,8 @@
 
 				fn[dragInfo.type](m); // fires either svdrag or huedrag, activeHSV gets updated
 
-				if(hex = fn.setPreview()) {
+				hex = fn.setPreview();
+				if(hex) {
 					self.hex = hex;
 					self.hsl = HsvToHsl(activeHSV);
 
@@ -533,8 +534,8 @@
 		 * Events triggered from body on active dragger instance (activeDropper)
 		 * Instance is set during a setFlag which happens during the iDropper's mousedown event
 		 */
-		this.bind('mousedrag', fn['mousedrag']);
-		this.bind('mouseup', fn['mouseup']);
+		this.bind('mousedrag', fn.mousedrag);
+		this.bind('mouseup', fn.mouseup);
 
 
 		/**
