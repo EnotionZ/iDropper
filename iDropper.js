@@ -132,7 +132,7 @@
 		if(lower > upper) { var tmp = lower; lower = upper; upper = tmp; }
 
 		if(wrap) {
-			var d = upper - lower;		// normalize
+			var d = upper - lower;      // normalize
 			n = (n-lower)%d;
 
 			if(n < 0) n += d;
@@ -220,23 +220,7 @@
 	 * Mouse up and move events (drag and dragend) are attached only once on the body and triggers that event
 	 * on the active iDropper instance. This allows dragging outside of container holding iDropper
 	 */
-	var $htmlbody = $('html,body');
-	var $body = $('body');
 	var activeDropper = null;
-	var iDfn = {
-		// Stops bubbling, prevents dragging image ghost
-		preventGhost: function() { return false; },
-
-		// Fires active instance's mouseup and dereference active instance
-		mouseup: function(e) { if(activeDropper) activeDropper.trigger('mouseup', e); activeDropper = null; },
-
-		// Fires active instance's mousedrag
-		mousemove: function(e) { if(activeDropper) activeDropper.trigger('mousedrag', e); }
-	};
-	$body.bind('mousemove.iDfn', iDfn.mousemove);
-	$body.bind('mouseup.iDfn', iDfn.mouseup);
-	$body.delegate('img.iD-pick', 'mousedown', iDfn.preventGhost);
-
 
 
 
@@ -247,7 +231,7 @@
 	 * src attribute (and also to keep a formal layer separation), the image is set as the background of a class in the CSS, we can
 	 * then pull the image path by reading the background-image css attribute on that class.
 	 */
-	var $imgPathEl = $('<div/>').appendTo($body),
+	var $imgPathEl = $('<div/>').appendTo($("body")),
 		URL = {
 			SATVAL:   $imgPathEl.attr('class','iD-img-sv').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
 			HUEBAR:   $imgPathEl.attr('class','iD-img-huebar').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
@@ -308,6 +292,7 @@
 		 * Element Reference, tabbed in tree heirarchy
 		 */
 		var
+		$body, $htmlbody,
 		$el = opts.$el,
 		$iD = $('<div/>').addClass('iD iD-layout-'+layout).appendTo($el),
 			$svContainer = $('<div/>').addClass('iD-sv-container iD-sv-container-'+layout).appendTo($iD),
@@ -398,8 +383,26 @@
 				return false;
 			},
 
+			fetchBody: function() {
+				if(!$body) {
+					$body = opts.$el.parents("body");
+					$htmlbody = opts.$el.parents("html, body");
+					// Fires active instance's mousedrag
+					$body.bind("mousemove.iDfn", function(e) {
+						if(activeDropper) activeDropper.trigger("mousedrag", e);
+					});
+					// Fires active instance's mouseup and dereference active instance
+					$body.bind("mouseup.iDfn", function(e) {
+						if(activeDropper) activeDropper.trigger("mouseup", e); activeDropper = null;
+					});
+					// Prevents dragging image ghost
+					$body.delegate("img.iD-pick", "mousedown", function(e) { e.preventDefault(); });
+				}
+			},
+
 
 			mousedown: function() {
+				fn.fetchBody();
 				mousedownFlag = true;
 				self.trigger('start', self.hex, self.hsl);
 				$body.addClass('iD-dragging');
