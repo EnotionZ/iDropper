@@ -397,6 +397,8 @@
 					});
 					// Prevents dragging image ghost
 					$body.delegate("img.iD-pick", "mousedown", function(e) { e.preventDefault(); });
+
+					if(IE) $body.addClass("ie ie"+IE);
 				}
 			},
 
@@ -576,7 +578,6 @@
 			}
 		}
 
-		if(IE) $body.addClass("ie ie"+IE);
 		if(IE6) {
 			if(layout === 'ring') {
 				$hueImg.remove();
