@@ -292,7 +292,7 @@
 		 * Element Reference, tabbed in tree heirarchy
 		 */
 		var
-		$body, $htmlbody,
+		doc, win, $win, $body, $htmlbody,
 		$el = opts.$el,
 		$iD = $('<div/>').addClass('iD iD-layout-'+layout).appendTo($el),
 			$svContainer = $('<div/>').addClass('iD-sv-container iD-sv-container-'+layout).appendTo($iD),
@@ -356,10 +356,11 @@
 			 * Stores information before a drag since mousedown and mouseup/mousemove have different "targets"
 			 */
 			setFlag: function(e, type) {
-				var tOffset = e.manual ? e : $(e.target).offset(),
-					scrollTop = $htmlbody.scrollTop() || $body.scrollTop() || 0;
-				tOffset.left -= $htmlbody.scrollLeft();
+				var tOffset = e.manual ? e : $(e.target).offset();
+				var scrollTop = $win.scrollTop() || 0;
+				tOffset.left -= $win.scrollLeft();
 				tOffset.top -= scrollTop;
+
 				dragInfo = { type: type, tx: tOffset.left, ty: tOffset.top };
 				activeDropper = self;
 			},
@@ -385,6 +386,9 @@
 
 			fetchBody: function() {
 				if(!$body) {
+					doc = $el[0].ownerDocument;
+					win = doc.defaultView || doc.parentWindow;
+					$win = $(win);
 					$body = opts.$el.parents("body");
 					$htmlbody = opts.$el.parents("html, body");
 					// Fires active instance's mousedrag
