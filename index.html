@@ -144,10 +144,10 @@ iDropperContainer = $('#container').iDropper({
 <pre class="prettyprint lang-js">
 // Callbacks passed in during instatiation 
 $('#container').iDropper({
-   onChange: function(hex) { console.log(hex); },
-   onStart: function(hex) { console.log(hex); },
-   onDrag: function(hex) { console.log(hex); },
-   onEnd: function(hex) { console.log(hex); }
+   change: function(hex) { console.log(hex); },
+   start: function(hex) { console.log(hex); },
+   drag: function(hex) { console.log(hex); },
+   end: function(hex) { console.log(hex); }
 });
 
 // Binding callbacks after instatiation
@@ -178,10 +178,10 @@ exEnd = $("#iDx-ex-usage-end");
 
 $('#iDx-ex-usage').iDropper({
    color: "#64c7d9",
-   onChange: function(hex) { exChange.html(hex).css("border-color", hex); },
-   onStart: function(hex) { exStart.html(hex).css("border-color", hex); },
-   onDrag: function(hex) { exDrag.html(hex).css("border-color", hex); },
-   onEnd: function(hex) { exEnd.html(hex).css("border-color", hex); }
+   change: function(hex) { exChange.html(hex).css("border-color", hex); },
+   start: function(hex) { exStart.html(hex).css("border-color", hex); },
+   drag: function(hex) { exDrag.html(hex).css("border-color", hex); },
+   end: function(hex) { exEnd.html(hex).css("border-color", hex); }
 });
 </pre>
 				<ul class="iDx-listing">
@@ -262,7 +262,7 @@ $('#iDx-ex-usage').iDropper({
    color: "#7dd1c3",
    layout: "ring",
    size: 125,
-   onDrag: function(hex) { exLayout.html(hex); }
+   drag: function(hex) { exLayout.html(hex); }
 });
 </pre>
 				<div id="iDx-ex-layout">
@@ -346,7 +346,7 @@ var $id1 = $('#iDx-ex-colormath'),
 
 $id1.iDropper({
    color: '#b4bb83',
-   onDrag: function(hex) {
+   drag: function(hex) {
       var
       hue = this.changeHue(180),
       dar = this.darken(.25),
@@ -419,8 +419,9 @@ demobtnContainer = $("#iDx-ex-demobtn").iDropper({
 	color: "#9ccc54",
 	layout: "ring",
 	size: 140,
-	onDrag: function(hex, hsl) {
+	drag: function(e) {
 		var
+		hex = e.hex,
 		cssStringify = $.iDropper.cssStringify,
 		bodybg = this.saturate(.1),
 		darken20 = this.darken(.2),
@@ -480,10 +481,10 @@ exDrag = $("#iDx-ex-usage-drag"),
 exEnd = $("#iDx-ex-usage-end");
 $('#iDx-ex-usage').iDropper({
 	color: "#64c7d9",
-	onChange: function(hex) { exChange.html(hex).css("border-color", hex); },
-	onStart: function(hex) { exStart.html(hex).css("border-color", hex); },
-	onDrag: function(hex) { exDrag.html(hex).css("border-color", hex); },
-	onEnd: function(hex) { exEnd.html(hex).css("border-color", hex); }
+	change: function(e) { exChange.html(e.hex).css("border-color", e.hex); },
+	start: function(e) { exStart.html(e.hex).css("border-color", e.hex); },
+	drag: function(e) { exDrag.html(e.hex).css("border-color", e.hex); },
+	end: function(e) { exEnd.html(e.hex).css("border-color", e.hex); }
 });
 
 
@@ -493,7 +494,7 @@ $('#iDx-ex-layout').iDropper({
    color: "#7dd1c3",
    layout: "ring",
    size: 125,
-   onDrag: function(hex) { exLayout.html(hex); }
+   drag: function(e) { exLayout.html(e.hex); }
 });
 
 
@@ -516,7 +517,7 @@ var $id1 = $('#iDx-ex-colormath'),
 
 $id1.iDropper({
    color: '#b4bb83',
-   onDrag: function(hex) {
+   drag: function(e) {
       var
       hue = this.changeHue(180),
       dar = this.darken(.25),
@@ -524,7 +525,7 @@ $id1.iDropper({
       sat = this.saturate(.25),
       des = this.desaturate(.25);
 
-      $id1Change.html(hex).css({'border-color': hex});
+      $id1Change.html(e.hex).css({'border-color': e.hex});
       $id1Hueshift.html(hue).css({'border-color': hue});
       $id1Lighten.html(lig).css({'border-color': lig});
       $id1Darken.html(dar).css({'border-color': dar});

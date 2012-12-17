@@ -40,6 +40,22 @@
 
 }
 
+.iD-alpha-container {
+	float: left;
+	width: 16px;
+	height: 256px;
+	position: relative;
+	z-index: 1;
+	margin-left: 10px;
+
+	.iD-indicator-alpha {
+		position: absolute; width: 20px; height: 1px;
+		z-index: 1; bottom: 0; right: -5px;
+		width: 12px; height: 10px; margin-top: -4px;
+		background: transparent url('images/selectiongfx.png') no-repeat 0 100%;
+	}
+}
+
 .iD-preview-input {
 	float: left; clear: left;
 	padding-top: 10px;
@@ -79,6 +95,10 @@
 	.iD-preview-input {
 		position: absolute;
 		bottom: -30px;
+	}
+	.iD-alpha-container {
+		float: right;
+		margin-right: -25px;
 	}
 }
 .iD-hue-container-ring {
@@ -120,6 +140,7 @@
 .iD-img-sv { background-image: url('images/sloverlay.png'); }
 .iD-img-huebar { background-image: url('images/hue.png'); }
 .iD-img-huering { background-image: url('images/hue_ring.png'); }
+.iD-img-alpha { background-image: url('images/transparent.png'); }
 
 
 //====>>>> 1x1px transparent image, fixes < IE9 target non-overlap issue

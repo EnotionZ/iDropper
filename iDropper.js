@@ -218,6 +218,11 @@
 				<div class="iD-indicator-hue"></div>\
 				<div class="iD-cover-hue iD-pick iD-hue-pick"></div>\
 			</div>\
+			<div class="iD-alpha-container">\
+				<img src="{srcAlpha}" class="iD-img">\
+				<div class="iD-indicator-alpha"></div>\
+				<div class="iD-cover-alpha iD-pick iD-alpha-pick"></div>\
+			</div>\
 			<div class="iD-preview-input">\
 				<div class="iD-preview"></div>\
 				<div class="iD-input-container">\
@@ -239,7 +244,8 @@
 	var URL = {
 		SATVAL:   $imgPathEl.attr('class','iD-img-sv').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
 		HUEBAR:   $imgPathEl.attr('class','iD-img-huebar').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
-		HUERING:  $imgPathEl.attr('class','iD-img-huering').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
+		HUERING:  $imgPathEl.attr('class','iD-img-huering').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, ""),
+		ALPHA:    $imgPathEl.attr('class','iD-img-alpha').css('background-image').replace(/"/g,"").replace(/url\(|\)$/ig, "")
 	};
 	$imgPathEl.remove();
 
@@ -254,8 +260,6 @@
 		indicatorPercent = (fullRSize/2-ringHalf)/fullRSize,	// percent of hue ring's width from center point where indicator sits
 		radiansToDegrees = 360/(2*Math.PI),
 
-		IE = /MSIE (\d+\.\d+);/.test(navigator.userAgent) ? parseFloat(RegExp.$1) : NaN,
-		IE6 = IE === 6,
 
 		keysToAccept = // Keys to filter in when user types in input field
 		//BSPACE TAB  LEFT UP  RIGHT DOWN  0  1  2  3  4  5  6  8  8  9    a  b  c  d  e  f    v    numpad 0-9
@@ -270,7 +274,6 @@
 	var dragCtx = null;
 	function bindMouseEventsOnBody($body) {
 		if(!$body.data('iDropper_drag_bounded')) {
-			if(IE) $body.addClass("ie ie"+IE);
 			$body.data('iDropper_drag_bounded', true);
 			$body.on('mouseup.idropper', function(e) { if(dragCtx) dragCtx.dragDone(e); });
 			$body.on('mousemove.idropper', function(e) { if(dragCtx) dragCtx.dragMove(e); });
@@ -284,10 +287,10 @@
 	 *
 	 * Possible option settings:
 	 * @param   size        Integer pixel of the width/height of the square hue/value box
-	 * @param   onChange    Function that's triggered when the color selection changes
+	 * @param   change      Function that's triggered when the color selection changes
 	 * @param   type        String indicates which type of layout to use. Either 'bar' or 'ring'. Default 'bar'
 	 */
-	 var IDropper = function() { IDropper.prototype.initialize.apply(this, arguments); };
+	 var IDropper = window.IDropper = function() { IDropper.prototype.initialize.apply(this, arguments); };
 	 IDropper.prototype = {
 
 		 initialize: function(opts) {
@@ -300,6 +303,7 @@
 
 			 this.hideHash = opts.hideHash;                           // Toggle for hash character in input field
 			 this.size =  opts.size || fullSize;                      // width-height of square saturation-value container
+			 this.alpha = 1;
 			 this.hsv = [0,1,1],                                      // current color of picker
 			 this.utils = $.iDropper;                                 // Expose color math and utility functions
 			 this.ringSize = fullRSize*this.size/fullSize,            // hue ring is proportional to size input
@@ -315,21 +319,23 @@
 
 			 $el.on('mousedown', '.iD-hue-pick', $.proxy(function(e) { this.dragStart(e, 'hue'); }, this));
 			 $el.on('mousedown', '.iD-sv-pick', $.proxy(function(e) { this.dragStart(e, 'sv'); }, this));
+			 $el.on('mousedown', '.iD-alpha-pick', $.proxy(function(e) { this.dragStart(e, 'alpha'); }, this));
 			 $el.on('keydown', '.iD-input-field', $.proxy(this, 'inputKeydown'));
 			 $el.on('keyup', '.iD-input-field', $.proxy(this, 'inputKeyup'));
 
 			 // Bind user-specified events
-			 if(typeof opts.onChange === "function") $el.on('change', $.proxy(opts.onChange,this));
-			 if(typeof opts.onStart === "function") $el.on('start', $.proxy(opts.onStart,this));
-			 if(typeof opts.onDrag === "function") $el.on('drag', $.proxy(opts.onDrag,this));
-			 if(typeof opts.onEnd === "function") $el.on('end', $.proxy(opts.onEnd,this));
+			 if(typeof opts.change === "function") $el.on('iD.change', $.proxy(opts.change,this));
+			 if(typeof opts.start === "function") $el.on('iD.start', $.proxy(opts.start,this));
+			 if(typeof opts.drag === "function") $el.on('iD.drag', $.proxy(opts.drag,this));
+			 if(typeof opts.end === "function") $el.on('iD.end', $.proxy(opts.end,this));
 
 
-			// burning out template into instantiated element
+			// burning out template into jQuery element
 			this.$iD = $(_utils.t(template, {
 				layout: this.layout,
 				srcSatVal: URL.SATVAL,
-				srcHue: this.layout === 'ring' ? URL.HUERING : URL.HUEBAR
+				srcHue: this.layout === 'ring' ? URL.HUERING : URL.HUEBAR,
+				srcAlpha: URL.ALPHA
 			})).appendTo($el);
 
 			// Element Reference, tabbed in tree heirarchy
@@ -341,6 +347,10 @@
 				this.hueImg = this.$hueContainer.find('.iD-img');
 				this.$hueIndicator = this.$hueContainer.find('.iD-indicator-hue');
 				this.$hueCover = this.$hueContainer.find('.iD-cover-hue');
+			this.$alphaContainer = this.$iD.find('.iD-alpha-container');
+				this.alphaImg = this.$alphaContainer.find('.iD-img');
+				this.$alphaIndicator = this.$alphaContainer.find('.iD-indicator-alpha');
+				this.$alphaCover = this.$alphaContainer.find('.iD-cover-alpha');
 			this.$previewInputContainer = this.$iD.find('.iD-preview-input');
 				this.$preview = this.$previewInputContainer.find('.iD-preview');
 				this.$inputContainer = this.$previewInputContainer.find('.iD-input-container');
@@ -360,26 +370,10 @@
 				}
 			}
 
-			if(IE6) {
-				if(this.layout === 'ring') {
-					this.$hueImg.remove();
-					$('<span/>')
-						.addClass('iD-ie6huefix iD-pick')
-						.prependTo(this.$hueContainer)
-						.height(this.ringSize);
-				}
-				this.$svImg.remove();
-				$('<span/>')
-					.addClass('iD-ie6svfix iD-pick')
-					.prependTo(this.$svContainer)
-					.height(this.size);
-			}
-
 			// Set initial color
 			opts.color = opts.color || '#ff0000';
 			this.setColor(opts.color, true);
 		 },
-
 
 		 /**
 		  * Keydown from input field, filters out invalid characters
@@ -391,9 +385,8 @@
 		 /**
 		  * Keyup from input field, only trigger "change" event if hex is valid
 		  */
-		inputKeyup: function() {
-			var hex = fn.setColor($input.val());
-			if(hex) this.$el.trigger('change', hex, this.hsl);
+		inputKeyup: function(e) {
+			if(this.setColor($input.val())) this.$el.trigger(_IDropperFn.buildEvent.call(this, 'change'));
 			return false;
 		},
 
@@ -413,16 +406,16 @@
 			if(_utils.isValidHex(hex)) {
 				if(hex.charAt(0) !== "#") hex = "#"+hex;
 				this.$preview.css('background-color', hex);
+				this.$alphaContainer.css('background-color', hex);
 				return hex;
 			}
 		},
 		setColor: function(hex, disableCallback) {
-			hex = this.setColorSilent(hex);
-			if(hex) {
-				this.updateInput(hex);
+			if(this.setColorSilent(hex)) {
+				this.updateInput(this.hex);
 
 				// Option to disable "change" callback (in case we *only* want to update the color)
-				if(!disableCallback) this.$el.trigger('change', hex, this.hsl);
+				if(!disableCallback) this.$el.trigger(_IDropperFn.buildEvent.call(this, 'change'));
 			}
 			return hex;
 		},
@@ -435,6 +428,8 @@
 				// sets instance's active hsv and color
 				this.hsv = hsv;
 				this.hex = hex;
+				this.rgba = colorUtils.hex2rgb(hex);
+				this.rgba.push(this.alpha);
 				this.hsl = colorUtils.hsv2hsl(hsv);
 
 				// Setting hue
@@ -472,7 +467,7 @@
 				 ty: tOffset.top - this.$win.scrollTop() || 0
 			 };
 			 this.$body.addClass('iD-dragging');
-			 this.$el.trigger('iD.start', this.dragData);
+			 this.$el.trigger(_IDropperFn.buildEvent.call(this, 'start', {dragData: this.dragData}));
 		 },
 
 		 /**
@@ -480,8 +475,8 @@
 		  */
 		 dragDone: function(e) {
 			 dragCtx = null;
-			 this.$el.trigger('end', this.hex);
-			 this.$el.trigger('change', this.hex);
+			 this.$el.trigger(_IDropperFn.buildEvent.call(this, 'end'));
+			 this.$el.trigger(_IDropperFn.buildEvent.call(this, 'change'));
 			 this.$body.removeClass('iD-dragging');
 		 },
 
@@ -503,8 +498,11 @@
 				 this.hex = hex;
 				 this.hsl = colorUtils.hsv2hsl(this.hsv);
 
+				 this.rgba = colorUtils.hex2rgb(hex);
+				 this.rgba.push(this.alpha);
+
 				 this.updateInput(hex);
-				 this.$el.trigger('drag', hex, this.hsl);
+				 this.$el.trigger(_IDropperFn.buildEvent.call(this, 'drag'));
 			 }
 		 }
 
@@ -514,6 +512,16 @@
 	  * Private functions to be invoked with iDropper context
 	  */
 	 var _IDropperFn = {
+		 buildEvent: function(name, extras) {
+			 var event = jQuery.Event('iD.'+name);
+			 $.extend(event, extras, {
+				 hex: this.hex,
+				 hsl: this.hsl,
+				 hsv: this.hsv,
+				 rgba: this.rgba
+			 });
+			 return event;
+		 },
 		 svDrag: function(m) {
 			 var size = this.size;
 			 var hsv = this.hsv;
@@ -523,6 +531,12 @@
 			 this.$colorIndicator.css({ left: m.x-3, top: m.y-3 });
 			 hsv[1] = m.x/this.size;
 			 hsv[2] = 1-m.y/this.size;
+		 },
+		 alphaDrag: function(m) {
+			 var size = this.layout === 'ring' ? this.ringSize : this.size;
+			 if(m.y > size) m.y = size-1;
+			 this.alpha = Math.round(100*m.y/size)/100;
+			 this.$alphaIndicator.css({ top: m.y });
 		 },
 		 hueBarDrag: function(m) {
 			 if(m.y > this.size) m.y = this.size-1;
