@@ -386,7 +386,7 @@
 		  * Keyup from input field, only trigger "change" event if hex is valid
 		  */
 		inputKeyup: function(e) {
-			if(this.setColor($input.val())) this.$el.trigger(_IDropperFn.buildEvent.call(this, 'change'));
+			if(this.setColor(this.$input.val())) this.$el.trigger(_IDropperFn.buildEvent.call(this, 'change'));
 			return false;
 		},
 
