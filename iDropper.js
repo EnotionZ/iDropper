@@ -370,6 +370,8 @@
 				}
 			}
 
+			if(typeof opts.alpha !== 'undefined' && !opts.alpha) this.$alphaContainer.hide();
+
 			// Set initial color
 			opts.color = opts.color || '#ff0000';
 			this.setColor(opts.color, true);
