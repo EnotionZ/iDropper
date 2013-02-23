@@ -296,10 +296,12 @@
 
 		initialize: function(opts) {
 			var $el =   this.$el = opts.$el;
-			var $body = this.$body = this.$el.parents('body');
 			var doc =   this.doc = $el[0].ownerDocument;
 			var win =   this.win = doc.defaultView || doc.parentWindow;
 			this.$win = $(win);
+
+			var $body = this.$body = this.$el.parents('body');
+			if(!$body.length) $body = this.$body = $('body');
 
 
 			this.hideHash = opts.hideHash;                           // Toggle for hash character in input field
