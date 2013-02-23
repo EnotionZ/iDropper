@@ -206,30 +206,30 @@
 
 
 
-	var template = '\
-		<div class="iD iD-layout-{layout}">\
-			<div class="iD-sv-container iD-sv-container-{layout}">\
-				<img src="{srcSatVal}" class="iD-img">\
-				<div class="iD-indicator-color"></div>\
-				<div class="iD-cover-color iD-pick iD-sv-pick"></div>\
-			</div>\
-			<div class="iD-hue-container iD-hue-container-{layout}">\
-				<img src="{srcHue}" class="iD-img">\
-				<div class="iD-indicator-hue"></div>\
-				<div class="iD-cover-hue iD-pick iD-hue-pick"></div>\
-			</div>\
-			<div class="iD-alpha-container">\
-				<img src="{srcAlpha}" class="iD-img">\
-				<div class="iD-indicator-alpha"></div>\
-				<div class="iD-cover-alpha iD-pick iD-alpha-pick"></div>\
-			</div>\
-			<div class="iD-preview-input">\
-				<div class="iD-preview"></div>\
-				<div class="iD-input-container">\
-					<input class="iD-input-field" type="text">\
-				</div>\
-			</div>\
-		</div>';
+	var template =
+		'<div class="iD iD-layout-{layout}">\n'+
+			'<div class="iD-sv-container iD-sv-container-{layout}">\n'+
+				'<img src="{srcSatVal}" class="iD-img">\n'+
+				'<div class="iD-indicator-color"></div>\n'+
+				'<div class="iD-cover-color iD-pick iD-sv-pick"></div>\n'+
+			'</div>\n'+
+			'<div class="iD-hue-container iD-hue-container-{layout}">\n'+
+				'<img src="{srcHue}" class="iD-img">\n'+
+				'<div class="iD-indicator-hue"></div>\n'+
+				'<div class="iD-cover-hue iD-pick iD-hue-pick"></div>\n'+
+			'</div>\n'+
+			'<div class="iD-alpha-container">\n'+
+				'<img src="{srcAlpha}" class="iD-img">\n'+
+				'<div class="iD-indicator-alpha"></div>\n'+
+				'<div class="iD-cover-alpha iD-pick iD-alpha-pick"></div>\n'+
+			'</div>\n'+
+			'<div class="iD-preview-input">\n'+
+				'<div class="iD-preview"></div>\n'+
+				'<div class="iD-input-container">\n'+
+					'<input class="iD-input-field" type="text">\n'+
+				'</div>\n'+
+			'</div>\n'+
+		'</div>';
 
 
 	/**
@@ -273,6 +273,7 @@
 	 */
 	var dragCtx = null;
 	function bindMouseEventsOnBody($body) {
+		if(!$body.length) $body = $('body');
 		if(!$body.data('iDropper_drag_bounded')) {
 			$body.data('iDropper_drag_bounded', true);
 			$body.on('mouseup.idropper', function(e) { if(dragCtx) dragCtx.dragDone(e); });
